@@ -90,10 +90,6 @@ public class Entity {
         return entityData;
     }
 
-    public BufferedImage getEntitySprite() {
-        return entitySprite;
-    }
-
     public ArrayList<String> getAvailableEntityTypes() {
         return availableEntityTypes;
     }
