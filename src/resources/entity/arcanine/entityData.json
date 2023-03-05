@@ -5,6 +5,9 @@
     "player"
   ],
   "spriteSize": [32, 32, 4, 8],
+  "animationSeq": [
+    "S","W","A","D","SA","SD","WA","WD"
+  ],
   "entityInfo": {
 
   }

@@ -81,4 +81,20 @@ public class Entity {
     public String getEntityType() {
         return entityType;
     }
+
+    public String getEntityID() {
+        return entityID;
+    }
+
+    public JSONObject getEntityData() {
+        return entityData;
+    }
+
+    public BufferedImage getEntitySprite() {
+        return entitySprite;
+    }
+
+    public ArrayList<String> getAvailableEntityTypes() {
+        return availableEntityTypes;
+    }
 }

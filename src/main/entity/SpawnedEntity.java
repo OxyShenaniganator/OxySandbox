@@ -1,9 +1,10 @@
 package main.entity;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Vector;
+import main.handler.AnimationsHandler;
+import org.json.simple.JSONArray;
+
+import java.awt.image.BufferedImage;
+import java.util.*;
 
 public class SpawnedEntity extends Entity{
 
@@ -12,6 +13,8 @@ public class SpawnedEntity extends Entity{
 
     private int xDelta;
     private int yDelta;
+    private HashMap<String, ArrayList<BufferedImage>> animationStorage;
+
 
     public SpawnedEntity(Entity entityType, int xPos, int yPos) {
         this(entityType, xPos, yPos, "default");
@@ -26,6 +29,10 @@ public class SpawnedEntity extends Entity{
 
         this.xDelta = 0;
         this.yDelta = 0;
+
+        this.animationStorage = AnimationsHandler.initEntityAnimation(this);
+
+
 
         if (!Objects.equals(type, "default") && availableEntityTypes.contains(type)) {
             System.out.println("[SpawnedEntity/INFO] Use entityType " + type + " to SpawnedEntity" + this.entityName);
