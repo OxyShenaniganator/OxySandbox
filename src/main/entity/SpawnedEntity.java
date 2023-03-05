@@ -1,8 +1,6 @@
 package main.entity;
 
 import main.handler.AnimationsHandler;
-import org.json.simple.JSONArray;
-
 import java.awt.image.BufferedImage;
 import java.util.*;
 
@@ -13,6 +11,8 @@ public class SpawnedEntity extends Entity{
 
     private int xDelta;
     private int yDelta;
+
+    private int maxSpeed;
 
     private int animTick;
     private int animSpeed;
@@ -40,6 +40,8 @@ public class SpawnedEntity extends Entity{
 
         this.xDelta = 0;
         this.yDelta = 0;
+
+        this.maxSpeed = 3;
 
         this.animSpeed = 30;
         this.animTick = 0;
@@ -106,7 +108,6 @@ public class SpawnedEntity extends Entity{
             if(this.animIndex >= this.entityCol - 1 || this.animIndex <= 1 ) this.animChange *= -1;
             this.animIndex += this.animChange;
         }
-        System.out.println(this.currentAnimation + " " + this.animIndex + " " + this.isMoving);
 
         if (!this.isMoving) {
             return this.animationStorage.get(this.lastAnimation).get(0);
@@ -149,6 +150,10 @@ public class SpawnedEntity extends Entity{
 
     public void setyDelta(int yDelta) {
         this.yDelta = yDelta;
+    }
+
+    public int getMaxSpeed() {
+        return maxSpeed;
     }
 
     public boolean isMoving() {

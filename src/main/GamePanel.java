@@ -2,6 +2,7 @@ package main;
 
 import input.KeyboardInputs;
 import main.entity.SpawnedEntity;
+import utils.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,13 +14,20 @@ public class GamePanel extends JPanel {
     private int resizedTileSize = tileSize * scalingSize;
     final int maxCol = 16;
     final int maxRow = 12;
+    private int vecXP = 0;
+    private int vecXN = 0;
+    private int vecYP = 0;
+    private int vecYN = 0;
 
-    private int frames = 0;
+    private int playerUpdateTick = 0;
+    private int maxPlayerUpdateTick = 10;
+
+    KeyboardInputs inputs = new KeyboardInputs();
 
 
     public GamePanel() {
 
-        addKeyListener(new KeyboardInputs());
+        addKeyListener(inputs);
 
         int screenWidth = resizedTileSize * maxCol;
         int screenHeight = resizedTileSize * maxRow;
@@ -30,10 +38,56 @@ public class GamePanel extends JPanel {
 
     }
 
+    public void checkPlayerInput() {
+
+        playerUpdateTick++;
+
+        int inputCount = 0;
+
+        if (!inputs.isWPressed && !inputs.isSPressed) {
+            vecYP = 0;
+            vecYN = 0;
+        }
+
+        if (!inputs.isAPressed && !inputs.isDPressed) {
+            vecXP = 0;
+            vecXN = 0;
+        }
+
+        if (inputs.isWPressed && vecYN <= 2) {
+            vecYN += 1;
+            inputCount += 1;
+        }
+        if (inputs.isSPressed && vecYP <= 2) {
+            vecYP += 1;
+            inputCount += 1;
+        }
+        if (inputs.isAPressed && vecXN <= 2) {
+            vecXN += 1;
+            inputCount += 1;
+        }
+        if (inputs.isDPressed && vecXP <= 2) {
+            vecXP += 1;
+            inputCount += 1;
+        }
+
+        if(playerUpdateTick >= maxPlayerUpdateTick) {
+
+            Vector2D playerVelocity = new Vector2D(vecXP-vecXN, vecYP-vecYN);
+
+            if (inputCount >= 2) {
+                playerVelocity.normalize();
+            }
+            Game.entitiesHandler.updatePlayerVelocity(playerVelocity);
+
+            playerUpdateTick = 0;
+        }
+    }
+
     public static void gameUpdate() {
         if (Game.entitiesHandler.spawnedEntitiesList.isEmpty()) {
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 10, 40);
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 400, "player");
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 10, 40, "player");
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 400);
         }
 
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {

@@ -1,9 +1,12 @@
 package main.handler;
 
+import com.sun.source.tree.BreakTree;
 import main.entity.Entity;
 import main.entity.SpawnedEntity;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import utils.Vector2D;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,4 +96,30 @@ public class EntitiesHandler {
         }
     }
 
+    public void updatePlayerVelocity(Vector2D velocity) {
+        for(SpawnedEntity entity: this.spawnedEntitiesList) {
+            if (Objects.equals(entity.getEntityType(), "player")) {
+
+                entity.setxDelta(velocity.getX());
+                entity.setyDelta(velocity.getY());
+
+                if(velocity.getX() == 0 && velocity.getY() == 0) {
+                    entity.setMoving(false);
+                    break;
+                }
+
+                entity.setMoving(true);
+                break;
+            }
+        }
+    }
+
+    public SpawnedEntity playerEntity() {
+        for(SpawnedEntity entity: this.spawnedEntitiesList) {
+            if (Objects.equals(entity.getEntityType(), "player")) {
+                return entity;
+            }
+        }
+        return null;
+    }
 }

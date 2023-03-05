@@ -37,9 +37,9 @@ public class Entity {
         JSONArray typeArray = (JSONArray)entityData.get("entityType");
 
         if (typeArray != null) {
-            for (int i=0; i<typeArray.size(); i++) {
-                System.out.println("[Entity/INFO] Added entityType " + (String)typeArray.get(i) + " to entity" + this.entityName);
-                availableEntityTypes.add((String)typeArray.get(i));
+            for (Object o : typeArray) {
+                System.out.println("[Entity/INFO] Added entityType " + o + " to entity" + this.entityName);
+                availableEntityTypes.add((String) o);
             }
             entityType = availableEntityTypes.get(0);
         }

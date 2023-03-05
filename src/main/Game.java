@@ -1,6 +1,5 @@
 package main;
 
-import main.entity.SpawnedEntity;
 import main.handler.EntitiesHandler;
 
 public class Game implements Runnable{
@@ -90,6 +89,7 @@ public class Game implements Runnable{
 
     private void update() {
 
+        gamePanel.checkPlayerInput();
         GamePanel.gameUpdate();
 
     }
