@@ -1,0 +1,11 @@
+{
+  "entityName": "Houndoom",
+  "entityType": [
+    "passiveEntity",
+    "player"
+  ],
+  "spriteSize": [34, 36, 4, 8],
+  "entityInfo": {
+
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "entityName": "Arcanine",
+  "entityType": [
+    "passiveEntity",
+    "player"
+  ],
+  "spriteSize": [32, 32, 4, 8],
+  "entityInfo": {
+
+  }
+}
