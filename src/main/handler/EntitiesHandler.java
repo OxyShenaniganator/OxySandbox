@@ -59,7 +59,7 @@ public class EntitiesHandler {
 
     public void spawnEntity(Entity baseEntity, int xPos, int yPos, String entityType) {
 
-        this.spawnedEntitiesList.add(new SpawnedEntity(baseEntity, xPos, yPos, entityType));
+        this.spawnedEntitiesList.add(new SpawnedEntity(baseEntity, xPos, -yPos, entityType));
         System.out.println("[EntityHandler/INFO] Spawned Entity " + baseEntity.getEntityName() + " of entityType " + entityType + " at: " + xPos + " , " + yPos);
 
     }

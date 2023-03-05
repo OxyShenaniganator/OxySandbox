@@ -12,8 +12,13 @@ public class GamePanel extends JPanel {
     private final int tileSize = 24;
     private int scalingSize = 2;
     private int resizedTileSize = tileSize * scalingSize;
+
     final int maxCol = 16;
     final int maxRow = 12;
+
+    private int screenWidth = resizedTileSize * maxCol;
+    private int screenHeight = resizedTileSize * maxRow;
+
     private int vecXP = 0;
     private int vecXN = 0;
     private int vecYP = 0;
@@ -29,8 +34,6 @@ public class GamePanel extends JPanel {
 
         addKeyListener(inputs);
 
-        int screenWidth = resizedTileSize * maxCol;
-        int screenHeight = resizedTileSize * maxRow;
         Dimension screenSize = new Dimension(screenWidth, screenHeight);
 
         this.setPreferredSize(screenSize);
@@ -87,7 +90,7 @@ public class GamePanel extends JPanel {
     public static void gameUpdate() {
         if (Game.entitiesHandler.spawnedEntitiesList.isEmpty()) {
             Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 10, 40, "player");
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 400);
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 100);
         }
 
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
@@ -107,7 +110,7 @@ public class GamePanel extends JPanel {
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
 
             g2.drawImage(
-                    entity.getEntitySprite(), entity.getxPos(), entity.getyPos(),
+                    entity.getEntitySprite(), screenWidth/2 + (entity.getxPos()-(entity.getEntityWidth()/2)),  screenHeight/2 + (entity.getyPos()-(entity.getEntityHeight()/2)),
                     entity.getEntityWidth() * scalingSize,
                     entity.getEntityHeight() * scalingSize,null);
 
