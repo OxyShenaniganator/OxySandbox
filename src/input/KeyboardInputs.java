@@ -23,19 +23,19 @@ public class KeyboardInputs implements KeyListener {
         switch (keyEvent.getKeyCode()) {
             case KeyEvent.VK_W:
                 isWPressed = true;
-                Game.entitiesHandler.changePlayerYDelta(-2);
+                Game.entitiesHandler.changePlayerYDelta(-4, isWPressed);
                 break;
             case KeyEvent.VK_A:
                 isAPressed = true;
-                Game.entitiesHandler.changePlayerXDelta(-2);
+                Game.entitiesHandler.changePlayerXDelta(-4, isAPressed);
                 break;
             case KeyEvent.VK_S:
                 isSPressed = true;
-                Game.entitiesHandler.changePlayerYDelta(2);
+                Game.entitiesHandler.changePlayerYDelta(4, isSPressed);
                 break;
             case KeyEvent.VK_D:
                 isDPressed = true;
-                Game.entitiesHandler.changePlayerXDelta(2);
+                Game.entitiesHandler.changePlayerXDelta(4,isDPressed);
                 break;
         }
 
@@ -47,15 +47,19 @@ public class KeyboardInputs implements KeyListener {
         switch (keyEvent.getKeyCode()) {
             case KeyEvent.VK_W:
                 isWPressed = false;
+                Game.entitiesHandler.changePlayerYDelta(0, isWPressed);
                 break;
             case KeyEvent.VK_A:
                 isAPressed = false;
+                Game.entitiesHandler.changePlayerXDelta(0, isAPressed);
                 break;
             case KeyEvent.VK_S:
                 isSPressed = false;
+                Game.entitiesHandler.changePlayerYDelta(0, isSPressed);
                 break;
             case KeyEvent.VK_D:
                 isDPressed = false;
+                Game.entitiesHandler.changePlayerXDelta(0, isDPressed);
                 break;
         }
 

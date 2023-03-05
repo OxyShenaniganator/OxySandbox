@@ -32,7 +32,7 @@ public class AnimationsHandler {
                 animationArray.add(spawnedEntity.getEntitySprite(i,j));
             }
             System.out.println("[SpawnedEntity/INFO] Import animation: " + animationSeq[i]);
-            animationHash.put(animationSeq[i], animationArray);
+            animationHash.put(animationSeq[i], (ArrayList)animationArray.clone());
             animationArray.clear();
         }
 

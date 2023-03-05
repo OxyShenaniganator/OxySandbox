@@ -71,21 +71,23 @@ public class EntitiesHandler {
 
     }
 
-    public void changePlayerXDelta(int xDelta) {
+    public void changePlayerXDelta(int xDelta, boolean isMovement) {
 
         for(SpawnedEntity entity: this.spawnedEntitiesList) {
             if (Objects.equals(entity.getEntityType(), "player")) {
                 entity.setxDelta(xDelta);
+                entity.setMoving(isMovement);
                 break;
             }
         }
     }
 
-    public void changePlayerYDelta(int yDelta) {
+    public void changePlayerYDelta(int yDelta, boolean isMovement) {
 
         for(SpawnedEntity entity: this.spawnedEntitiesList) {
             if (Objects.equals(entity.getEntityType(), "player")) {
                 entity.setyDelta(yDelta);
+                entity.setMoving(isMovement);
                 break;
             }
         }

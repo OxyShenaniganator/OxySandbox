@@ -39,6 +39,7 @@ public class GamePanel extends JPanel {
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
             if(entity == null) continue;
 
+            entity.updateAnimation();
             entity.updatePosition();
         }
     }
@@ -52,7 +53,7 @@ public class GamePanel extends JPanel {
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
 
             g2.drawImage(
-                    entity.getEntitySprite(0,0), entity.getxPos(), entity.getyPos(),
+                    entity.getEntitySprite(), entity.getxPos(), entity.getyPos(),
                     entity.getEntityWidth() * scalingSize,
                     entity.getEntityHeight() * scalingSize,null);
 
