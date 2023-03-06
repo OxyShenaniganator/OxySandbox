@@ -25,6 +25,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
     private boolean isMoving;
     private final HashMap<String, ArrayList<BufferedImage>> animationStorage;
+    private final HashMap<String, HashMap<Integer, Integer>> collisionBox;
 
 
     public SpawnedEntity(Entity entityType, int xPos, int yPos) {
@@ -52,6 +53,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
         this.isMoving = false;
 
+        this.collisionBox = new HashMap<>();
         this.animationStorage = AnimationsHandler.initEntityAnimation(this);
         System.out.println(this.animationStorage);
 
