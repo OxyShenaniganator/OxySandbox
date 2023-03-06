@@ -201,8 +201,6 @@ public class EntitiesHandler {
 
         if (this.playerEntity() != null) {
 
-            playerUpdateTick++;
-
             int inputCount = 0;
 
             if (!this.isWPressed && !this.isSPressed) {
@@ -232,18 +230,24 @@ public class EntitiesHandler {
                 inputCount += 1;
             }
 
-            playerVelocity.updateVector(vecXP - vecXN, vecYP - vecYN);
+            changePlayerVelocity(inputCount);
+        }
+    }
 
-            if (playerUpdateTick >= maxPlayerUpdateTick) {
+    private void changePlayerVelocity(int inputCount) {
+        playerVelocity.updateVector(vecXP - vecXN, vecYP - vecYN);
 
-                if (inputCount >= 2) {
-                    playerVelocity.normalize();
-                }
+        playerUpdateTick++;
 
-                this.updatePlayerVelocity(playerVelocity);
+        if (playerUpdateTick >= maxPlayerUpdateTick) {
 
-                playerUpdateTick = 0;
+            if (inputCount >= 2) {
+                playerVelocity.normalize();
             }
+
+            this.updatePlayerVelocity(playerVelocity);
+
+            playerUpdateTick = 0;
         }
     }
 }
