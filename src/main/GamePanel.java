@@ -43,64 +43,10 @@ public class GamePanel extends JPanel {
 
     }
 
-    public void checkPlayerInput() {
-
-        playerUpdateTick++;
-
-        int inputCount = 0;
-
-        if (!inputs.isWPressed && !inputs.isSPressed) {
-            vecYP = 0;
-            vecYN = 0;
-        }
-
-        if (!inputs.isAPressed && !inputs.isDPressed) {
-            vecXP = 0;
-            vecXN = 0;
-        }
-
-        if (inputs.isWPressed && vecYN <= 2) {
-            vecYN += 1;
-            inputCount += 1;
-        }
-        if (inputs.isSPressed && vecYP <= 2) {
-            vecYP += 1;
-            inputCount += 1;
-        }
-        if (inputs.isAPressed && vecXN <= 2) {
-            vecXN += 1;
-            inputCount += 1;
-        }
-        if (inputs.isDPressed && vecXP <= 2) {
-            vecXP += 1;
-            inputCount += 1;
-        }
-
-        playerVelocity.updateVector(vecXP-vecXN, vecYP-vecYN);
-
-        if(playerUpdateTick >= maxPlayerUpdateTick) {
-
-            if (inputCount >= 2) {
-                playerVelocity.normalize();
-            }
-
-            Game.entitiesHandler.updatePlayerVelocity(playerVelocity);
-
-            playerUpdateTick = 0;
-        }
-    }
-
     public static void gameUpdate() {
         if (Game.entitiesHandler.spawnedEntitiesList.isEmpty()) {
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 10, 40, "player");
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 100);
-        }
-
-        for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
-            if(entity == null) continue;
-
-            entity.updateAnimation();
-            entity.updatePosition();
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 10, 40);
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 100, "player");
         }
     }
 

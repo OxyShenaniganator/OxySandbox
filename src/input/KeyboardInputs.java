@@ -1,5 +1,7 @@
 package input;
 
+import main.Game;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -22,18 +24,22 @@ public class KeyboardInputs implements KeyListener {
 
         if (input == KeyEvent.VK_W) {
             isWPressed = true;
+            Game.entitiesHandler.setWPressed(true);
 
         }
         if (input == KeyEvent.VK_A) {
             isAPressed = true;
+            Game.entitiesHandler.setAPressed(true);
 
         }
         if (input == KeyEvent.VK_S) {
             isSPressed = true;
+            Game.entitiesHandler.setSPressed(true);
 
         }
         if (input == KeyEvent.VK_D) {
             isDPressed = true;
+            Game.entitiesHandler.setDPressed(true);
 
         }
 
@@ -44,10 +50,10 @@ public class KeyboardInputs implements KeyListener {
     public void keyReleased(KeyEvent keyEvent) {
 
         switch (keyEvent.getKeyCode()) {
-            case KeyEvent.VK_W -> isWPressed = false;
-            case KeyEvent.VK_A -> isAPressed = false;
-            case KeyEvent.VK_S -> isSPressed = false;
-            case KeyEvent.VK_D -> isDPressed = false;
+            case KeyEvent.VK_W -> Game.entitiesHandler.setWPressed(false);
+            case KeyEvent.VK_A -> Game.entitiesHandler.setAPressed(false);
+            case KeyEvent.VK_S -> Game.entitiesHandler.setSPressed(false);
+            case KeyEvent.VK_D -> Game.entitiesHandler.setDPressed(false);
         }
 
     }

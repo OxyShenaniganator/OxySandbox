@@ -1,6 +1,7 @@
 package main.handler;
 
 import com.sun.source.tree.BreakTree;
+import main.Game;
 import main.entity.Entity;
 import main.entity.SpawnedEntity;
 import org.json.simple.JSONArray;
@@ -15,7 +16,23 @@ import java.util.Objects;
 
 public class EntitiesHandler {
 
-    // public ArrayList<Entity> entitiesList;
+    // Player controls
+    private boolean isWPressed = false;
+    private boolean isAPressed = false;
+    private boolean isSPressed = false;
+    private boolean isDPressed = false;
+
+    private int vecYN = 0;
+    private int vecYP = 0;
+    private int vecXN = 0;
+    private int vecXP = 0;
+
+    private int playerUpdateTick = 0;
+    private int maxPlayerUpdateTick = 10;
+
+    private Vector2D playerVelocity = new Vector2D(0,0);
+
+    // Entities management
     public HashMap<String, Entity> entitiesHashMap;
     public ArrayList<SpawnedEntity> spawnedEntitiesList;
 
@@ -75,6 +92,18 @@ public class EntitiesHandler {
         this.spawnedEntitiesList.sort(spawnedEntityComparator);
     }
 
+    public void update() {
+
+        this.checkPlayerInput();
+
+        for (SpawnedEntity entity: this.spawnedEntitiesList) {
+            if(entity == null) continue;
+
+            entity.updateAnimation();
+            entity.updatePosition();
+        }
+    }
+
     public Entity getEntityType(String entityName) {
         if (this.entitiesHashMap.get(entityName) == null) {
             System.out.println("[EntityHandler/ERROR] Failed to get entity with name:" + entityName);
@@ -83,6 +112,41 @@ public class EntitiesHandler {
 
         return this.entitiesHashMap.get(entityName);
 
+    }
+
+    // Player Entity Control
+
+
+    public boolean isWPressed() {
+        return isWPressed;
+    }
+
+    public void setWPressed(boolean WPressed) {
+        isWPressed = WPressed;
+    }
+
+    public boolean isAPressed() {
+        return isAPressed;
+    }
+
+    public void setAPressed(boolean APressed) {
+        isAPressed = APressed;
+    }
+
+    public boolean isSPressed() {
+        return isSPressed;
+    }
+
+    public void setSPressed(boolean SPressed) {
+        isSPressed = SPressed;
+    }
+
+    public boolean isDPressed() {
+        return isDPressed;
+    }
+
+    public void setDPressed(boolean DPressed) {
+        isDPressed = DPressed;
     }
 
     public void changePlayerXDelta(int xDelta, boolean isMovement) {
@@ -132,5 +196,54 @@ public class EntitiesHandler {
             }
         }
         return null;
+    }
+    public void checkPlayerInput() {
+
+        if (this.playerEntity() != null) {
+
+            playerUpdateTick++;
+
+            int inputCount = 0;
+
+            if (!this.isWPressed && !this.isSPressed) {
+                vecYP = 0;
+                vecYN = 0;
+            }
+
+            if (!this.isAPressed && !this.isDPressed) {
+                vecXP = 0;
+                vecXN = 0;
+            }
+
+            if (this.isWPressed && vecYN <= this.playerEntity().getMaxSpeed()) {
+                vecYN += 1;
+                inputCount += 1;
+            }
+            if (this.isSPressed && vecYP <= this.playerEntity().getMaxSpeed()) {
+                vecYP += 1;
+                inputCount += 1;
+            }
+            if (this.isAPressed && vecXN <= this.playerEntity().getMaxSpeed()) {
+                vecXN += 1;
+                inputCount += 1;
+            }
+            if (this.isDPressed && vecXP <= this.playerEntity().getMaxSpeed()) {
+                vecXP += 1;
+                inputCount += 1;
+            }
+
+            playerVelocity.updateVector(vecXP - vecXN, vecYP - vecYN);
+
+            if (playerUpdateTick >= maxPlayerUpdateTick) {
+
+                if (inputCount >= 2) {
+                    playerVelocity.normalize();
+                }
+
+                this.updatePlayerVelocity(playerVelocity);
+
+                playerUpdateTick = 0;
+            }
+        }
     }
 }

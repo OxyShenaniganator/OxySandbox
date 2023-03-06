@@ -89,7 +89,7 @@ public class Game implements Runnable{
 
     private void update() {
 
-        gamePanel.checkPlayerInput();
+        entitiesHandler.update();
         entitiesHandler.sortSpawnedEntity();
         GamePanel.gameUpdate();
 
