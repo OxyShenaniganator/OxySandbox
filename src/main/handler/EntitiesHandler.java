@@ -9,6 +9,7 @@ import utils.Vector2D;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -17,6 +18,13 @@ public class EntitiesHandler {
     // public ArrayList<Entity> entitiesList;
     public HashMap<String, Entity> entitiesHashMap;
     public ArrayList<SpawnedEntity> spawnedEntitiesList;
+
+    Comparator<SpawnedEntity> spawnedEntityComparator = new Comparator<SpawnedEntity>() {
+        @Override
+        public int compare(SpawnedEntity entity1, SpawnedEntity entity2) {
+            return entity1.compareTo(entity2);
+        }
+    };
 
     public EntitiesHandler(){
 
@@ -58,10 +66,13 @@ public class EntitiesHandler {
     }
 
     public void spawnEntity(Entity baseEntity, int xPos, int yPos, String entityType) {
-
         this.spawnedEntitiesList.add(new SpawnedEntity(baseEntity, xPos, -yPos, entityType));
         System.out.println("[EntityHandler/INFO] Spawned Entity " + baseEntity.getEntityName() + " of entityType " + entityType + " at: " + xPos + " , " + yPos);
 
+    }
+
+    public void sortSpawnedEntity() {
+        this.spawnedEntitiesList.sort(spawnedEntityComparator);
     }
 
     public Entity getEntityType(String entityName) {

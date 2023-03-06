@@ -4,7 +4,7 @@ import main.handler.AnimationsHandler;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-public class SpawnedEntity extends Entity{
+public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
     private int xPos;
     private int yPos;
@@ -162,5 +162,19 @@ public class SpawnedEntity extends Entity{
 
     public void setMoving(boolean moving) {
         isMoving = moving;
+    }
+
+    // Comparator
+
+
+    @Override
+    public String toString() {
+        return "{" + "entityID=" + entityID + '\'' +
+                ", entityType='" + entityType + "}";
+    }
+
+    @Override
+    public int compareTo(SpawnedEntity spawnedEntity) {
+        return Integer.compare(this.yPos, spawnedEntity.getyPos());
     }
 }

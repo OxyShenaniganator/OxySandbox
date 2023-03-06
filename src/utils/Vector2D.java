@@ -10,6 +10,13 @@ public class Vector2D {
         this.y = y;
     }
 
+    public void updateVector(int x, int y) {
+
+        this.x = x;
+        this.y = y;
+
+    }
+
     public void normalize() {
         double normalizedLength = (float)(this.x + this.y)/1.5;
 

@@ -93,4 +93,22 @@ public class Entity {
     public ArrayList<String> getAvailableEntityTypes() {
         return availableEntityTypes;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Entity entity = (Entity) o;
+
+        if (entityRow != entity.entityRow) return false;
+        return entityID.equals(entity.entityID);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = entityID.hashCode();
+        result = 31 * result + entityRow;
+        return result;
+    }
 }

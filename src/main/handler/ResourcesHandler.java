@@ -31,7 +31,14 @@ public class ResourcesHandler {
                 throw new RuntimeException(e);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
 
     }
 
@@ -45,6 +52,12 @@ public class ResourcesHandler {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

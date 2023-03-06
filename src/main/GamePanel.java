@@ -24,6 +24,8 @@ public class GamePanel extends JPanel {
     private int vecYP = 0;
     private int vecYN = 0;
 
+    private Vector2D playerVelocity = new Vector2D(vecXP-vecXN, vecYP-vecYN);
+
     private int playerUpdateTick = 0;
     private int maxPlayerUpdateTick = 10;
 
@@ -74,13 +76,14 @@ public class GamePanel extends JPanel {
             inputCount += 1;
         }
 
-        if(playerUpdateTick >= maxPlayerUpdateTick) {
+        playerVelocity.updateVector(vecXP-vecXN, vecYP-vecYN);
 
-            Vector2D playerVelocity = new Vector2D(vecXP-vecXN, vecYP-vecYN);
+        if(playerUpdateTick >= maxPlayerUpdateTick) {
 
             if (inputCount >= 2) {
                 playerVelocity.normalize();
             }
+
             Game.entitiesHandler.updatePlayerVelocity(playerVelocity);
 
             playerUpdateTick = 0;
