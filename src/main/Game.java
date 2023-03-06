@@ -1,12 +1,14 @@
 package main;
 
 import main.handler.EntitiesHandler;
+import main.handler.TilesHandler;
 
 public class Game implements Runnable{
 
     private GameFrame gameFrame;
     private GamePanel gamePanel;
     public static EntitiesHandler entitiesHandler;
+    public static TilesHandler tilesHandler;
 
     private Thread gameThread;
     private final int setFPS = 120;
@@ -18,9 +20,13 @@ public class Game implements Runnable{
     public Game() {
 
         entitiesHandler = new EntitiesHandler();
-        System.out.println(entitiesHandler.entitiesHashMap);
+        tilesHandler = new TilesHandler(gamePanel);
+
         gamePanel = new GamePanel();
         gameFrame = new GameFrame(gamePanel);
+
+        System.out.println(entitiesHandler.entitiesHashMap);
+
         gamePanel.requestFocus();
         startGameLoop();
 

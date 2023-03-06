@@ -56,6 +56,14 @@ public class GamePanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
 
+        for (int i = 0; i < this.maxCol; i++) {
+            for (int j = 0; j < this.maxRow; j++) {
+                g2.drawImage(Game.tilesHandler.generatedMap[i][j].tileImage,
+                        i*tileSize*scalingSize,j*tileSize*scalingSize,
+                        tileSize*scalingSize,tileSize*scalingSize,null);
+            }
+        }
+
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
 
             g2.drawImage(
