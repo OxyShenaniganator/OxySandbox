@@ -2,12 +2,14 @@ package main.handler;
 
 import com.sun.source.tree.BreakTree;
 import main.Game;
+import main.GamePanel;
 import main.entity.Entity;
 import main.entity.SpawnedEntity;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import utils.Vector2D;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,6 +17,8 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class EntitiesHandler {
+
+    GamePanel gamePanel;
 
     // Player controls
     private boolean isWPressed = false;
@@ -49,6 +53,14 @@ public class EntitiesHandler {
         this.spawnedEntitiesList = new ArrayList<>();
         this.initEntity();
 
+    }
+
+    public void setGamePanel(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+    }
+
+    public Dimension getGameScreenSize() {
+        return new Dimension(gamePanel.screenX, gamePanel.screenY);
     }
 
     public void initEntity() {

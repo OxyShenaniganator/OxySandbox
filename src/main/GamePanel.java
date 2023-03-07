@@ -19,6 +19,9 @@ public class GamePanel extends JPanel {
     private int screenWidth = resizedTileSize * maxCol;
     private int screenHeight = resizedTileSize * maxRow;
 
+    public final int screenX;
+    public final int screenY;
+
     private int vecXP = 0;
     private int vecXN = 0;
     private int vecYP = 0;
@@ -41,12 +44,15 @@ public class GamePanel extends JPanel {
         this.setPreferredSize(screenSize);
         this.setDoubleBuffered(true);
 
+        this.screenX = screenWidth/2 - (tileSize/2);
+        this.screenY = screenHeight/2 - (tileSize/2);
+
     }
 
     public static void gameUpdate() {
         if (Game.entitiesHandler.spawnedEntitiesList.isEmpty()) {
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 10, 40);
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 100, "player");
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 0, 0, "player");
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 100);
         }
     }
 
@@ -55,22 +61,34 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
+        int scaledTileSize = tileSize*scalingSize;
 
-        for (int i = 0; i < this.maxCol; i++) {
-            for (int j = 0; j < this.maxRow; j++) {
-                g2.drawImage(Game.tilesHandler.generatedMap[i][j].tileImage,
-                        i*tileSize*scalingSize,j*tileSize*scalingSize,
-                        tileSize*scalingSize,tileSize*scalingSize,null);
+        for (int i = -Game.tilesHandler.maxMapSize/2; i <= Game.tilesHandler.maxMapSize/2; i++) {
+            for (int j = -Game.tilesHandler.maxMapSize/2; j <= Game.tilesHandler.maxMapSize/2; j++) {
+
+                    g2.drawImage(Game.tilesHandler.getTile(i, j).tileImage,
+                            i * scaledTileSize - Game.entitiesHandler.playerEntity().getxPos(), j * scaledTileSize - Game.entitiesHandler.playerEntity().getyPos(),
+                            scaledTileSize, scaledTileSize, null);
+
             }
         }
 
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
 
-            g2.drawImage(
-                    entity.getEntitySprite(), screenWidth/2 + (entity.getxPos()-(entity.getEntityWidth()/2)),  screenHeight/2 + (entity.getyPos()-(entity.getEntityHeight()/2)),
-                    entity.getEntityWidth() * scalingSize,
-                    entity.getEntityHeight() * scalingSize,null);
+            if (entity.getEntityType() != "player") {
+                g2.drawImage(
+                        entity.getEntitySprite(), entity.getxPos() - Game.entitiesHandler.playerEntity().getxPos(), entity.getyPos() - Game.entitiesHandler.playerEntity().getyPos(),
+                        entity.getEntityWidth() * scalingSize,
+                        entity.getEntityHeight() * scalingSize, null);
 
+            } else {
+
+                g2.drawImage(
+                        entity.getEntitySprite(), screenX, screenY,
+                        entity.getEntityWidth() * scalingSize,
+                        entity.getEntityHeight() * scalingSize, null);
+
+            }
         }
     }
 }

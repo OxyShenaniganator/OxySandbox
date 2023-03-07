@@ -1,14 +1,14 @@
 package main;
 
 import main.handler.EntitiesHandler;
-import main.handler.TilesHandler;
+import main.handler.WorldTilesHandler;
 
 public class Game implements Runnable{
 
     private GameFrame gameFrame;
     private GamePanel gamePanel;
     public static EntitiesHandler entitiesHandler;
-    public static TilesHandler tilesHandler;
+    public static WorldTilesHandler tilesHandler;
 
     private Thread gameThread;
     private final int setFPS = 120;
@@ -20,10 +20,12 @@ public class Game implements Runnable{
     public Game() {
 
         entitiesHandler = new EntitiesHandler();
-        tilesHandler = new TilesHandler(gamePanel);
+        tilesHandler = new WorldTilesHandler(gamePanel);
 
         gamePanel = new GamePanel();
         gameFrame = new GameFrame(gamePanel);
+
+        entitiesHandler.setGamePanel(gamePanel);
 
         System.out.println(entitiesHandler.entitiesHashMap);
 

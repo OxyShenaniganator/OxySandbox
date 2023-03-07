@@ -8,17 +8,20 @@ import utils.OpenSimplex2S;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class TilesHandler {
+public class WorldTilesHandler {
 
     GamePanel gamePanel;
     public ArrayList<TileEntity> availableTile;
+
+    public int maxMapSize;
     public TileEntity[][] generatedMap;
 
-    public TilesHandler(GamePanel gamePanel) {
+    public WorldTilesHandler(GamePanel gamePanel) {
 
         this.gamePanel = gamePanel;
         this.availableTile = new ArrayList<>();
-        this.generatedMap = new TileEntity[16][16];
+        this.maxMapSize = 99;
+        this.generatedMap = new TileEntity[this.maxMapSize][this.maxMapSize];
 
         this.initTiles();
         // this.populateTile();
@@ -33,14 +36,14 @@ public class TilesHandler {
         long seed = Math.round(Math.random()*1000000);
 
         if (generatedMap != null) {
-            for (int i = 0; i < 16; i ++) {
-                for (int j = 0; j < 16; j ++) {
+            for (int i = 0; i < maxMapSize; i ++) {
+                for (int j = 0; j < maxMapSize; j ++) {
 
                     double newI = i*0.07;
                     double newJ = j*0.07;
 
                     if (OpenSimplex2S.noise2_ImproveX(seed, newI, newJ) <= -0.2 ) generatedMap[x][y] = availableTile.get(0);
-                    else if (OpenSimplex2S.noise2_ImproveX(seed, newI, newJ) <= 0 ) generatedMap[x][y] = availableTile.get(1);
+                    else if (OpenSimplex2S.noise2_ImproveX(seed, newI, newJ) <= 0.08 ) generatedMap[x][y] = availableTile.get(1);
                     else generatedMap[x][y] = availableTile.get(2);
 
                     y++;
@@ -68,6 +71,13 @@ public class TilesHandler {
             }
         }
 
+    }
+
+    public TileEntity getTile(int x, int y) {
+
+        int halfMapSize = (int)Math.floor(maxMapSize/2);
+
+        return generatedMap[x+(halfMapSize)][y+halfMapSize];
     }
 
 }

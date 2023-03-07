@@ -1,5 +1,6 @@
 package main.entity;
 
+import main.Game;
 import main.handler.AnimationsHandler;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -123,7 +124,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
     // Getter & Setter
 
     public int getxPos() {
-        return xPos;
+        return Game.entitiesHandler.getGameScreenSize().width /2 + xPos - entityWidth/2;
     }
 
     public void setxPos(int xPos) {
@@ -131,7 +132,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
     }
 
     public int getyPos() {
-        return yPos;
+        return Game.entitiesHandler.getGameScreenSize().height/2 + yPos - entityWidth/2;
     }
 
     public void setyPos(int yPos) {
@@ -177,6 +178,6 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
     @Override
     public int compareTo(SpawnedEntity spawnedEntity) {
-        return Integer.compare(this.yPos, spawnedEntity.getyPos());
+        return Integer.compare(this.getyPos(), spawnedEntity.getyPos());
     }
 }
