@@ -1,4 +1,4 @@
-package main.entity;
+package net.oxyoksirotl.entity;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,14 +38,14 @@ public class Entity {
 
         if (typeArray != null) {
             for (Object o : typeArray) {
-                System.out.println("[Entity/INFO] Added entityType " + o + " to entity" + this.entityName);
+                System.out.println("[Entity/INFO] Added entityType " + o + " to net.oxyoksirotl.entity" + this.entityName);
                 availableEntityTypes.add((String) o);
             }
             entityType = availableEntityTypes.get(0);
         }
 
-        if (this.getClass().getName().equals("main.entity.Entity")) {
-            System.out.println("[Entity/INFO] Initialized entity: " + this.entityID + " with height " + this.entityHeight + " and width " + this.entityWidth);
+        if (this.getClass().getName().equals("main.java.net.oxyoksirotl.entity.Entity")) {
+            System.out.println("[Entity/INFO] Initialized net.oxyoksirotl.entity: " + this.entityID + " with height " + this.entityHeight + " and width " + this.entityWidth);
             System.out.println("[Entity/INFO] Row:" + this.entityRow + ", Col: " + this.entityCol);
         }
     }

@@ -1,6 +1,6 @@
-package input;
+package net.oxyoksirotl.input;
 
-import main.Game;
+import net.oxyoksirotl.Game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

@@ -1,4 +1,4 @@
-package main.handler;
+package net.oxyoksirotl.handler;
 
 
 import org.json.simple.JSONObject;

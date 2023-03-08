@@ -1,4 +1,4 @@
-package main.entity;
+package net.oxyoksirotl.entity;
 
 import java.awt.image.BufferedImage;
 

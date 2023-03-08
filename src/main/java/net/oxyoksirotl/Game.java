@@ -1,7 +1,7 @@
-package main;
+package net.oxyoksirotl;
 
-import main.handler.EntitiesHandler;
-import main.handler.WorldTilesHandler;
+import net.oxyoksirotl.handler.EntitiesHandler;
+import net.oxyoksirotl.handler.WorldTilesHandler;
 
 public class Game implements Runnable{
 
@@ -11,7 +11,7 @@ public class Game implements Runnable{
     public static WorldTilesHandler tilesHandler;
 
     private Thread gameThread;
-    private final int setFPS = 120;
+    private final int setFPS = 60;
     private final int setUPS = 200;
 
     private int frames = 0;

@@ -1,7 +1,6 @@
-package main.entity;
+package net.oxyoksirotl.entity;
 
-import main.Game;
-import main.handler.AnimationsHandler;
+import net.oxyoksirotl.handler.AnimationsHandler;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
@@ -45,7 +44,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
         this.maxSpeed = 2;
 
-        this.animSpeed = 20;
+        this.animSpeed = 10;
         this.animTick = 0;
         this.animIndex = 2;
         this.animChange = 1;
@@ -124,7 +123,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
     // Getter & Setter
 
     public int getxPos() {
-        return Game.entitiesHandler.getGameScreenSize().width /2 + xPos - entityWidth/2;
+        return xPos - entityWidth/2;
     }
 
     public void setxPos(int xPos) {
@@ -132,7 +131,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
     }
 
     public int getyPos() {
-        return Game.entitiesHandler.getGameScreenSize().height/2 + yPos - entityWidth/2;
+        return yPos - entityWidth/2;
     }
 
     public void setyPos(int yPos) {

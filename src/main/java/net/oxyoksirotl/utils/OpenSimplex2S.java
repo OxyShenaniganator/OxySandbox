@@ -1,4 +1,4 @@
-package utils;
+package net.oxyoksirotl.utils;
 
 /**
  * K.jpg's OpenSimplex 2, smooth variant ("SuperSimplex")

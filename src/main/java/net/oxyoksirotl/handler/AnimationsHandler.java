@@ -1,6 +1,6 @@
-package main.handler;
+package net.oxyoksirotl.handler;
 
-import main.entity.SpawnedEntity;
+import net.oxyoksirotl.entity.SpawnedEntity;
 import org.json.simple.JSONArray;
 
 import java.awt.image.BufferedImage;
@@ -28,7 +28,7 @@ public class AnimationsHandler {
 
         for (int i = 0; i< spawnedEntity.getEntityRow(); i++) {
             for (int j = 0; j< spawnedEntity.getEntityCol(); j++) {
-                System.out.println("[SpawnedEntity/INFO] Handling entity animations " + "["+ i + "," + j + "]" );
+                System.out.println("[SpawnedEntity/INFO] Handling net.oxyoksirotl.entity animations " + "["+ i + "," + j + "]" );
                 animationArray.add(spawnedEntity.getEntitySprite(i,j));
             }
             System.out.println("[SpawnedEntity/INFO] Import animation: " + animationSeq[i]);

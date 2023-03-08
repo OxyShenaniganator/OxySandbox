@@ -1,13 +1,11 @@
-package main.handler;
+package net.oxyoksirotl.handler;
 
-import com.sun.source.tree.BreakTree;
-import main.Game;
-import main.GamePanel;
-import main.entity.Entity;
-import main.entity.SpawnedEntity;
+import net.oxyoksirotl.GamePanel;
+import net.oxyoksirotl.entity.Entity;
+import net.oxyoksirotl.entity.SpawnedEntity;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import utils.Vector2D;
+import net.oxyoksirotl.utils.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,7 +30,7 @@ public class EntitiesHandler {
     private int vecXP = 0;
 
     private int playerUpdateTick = 0;
-    private int maxPlayerUpdateTick = 10;
+    private int maxPlayerUpdateTick = 12;
 
     private Vector2D playerVelocity = new Vector2D(0,0);
 
@@ -67,7 +65,7 @@ public class EntitiesHandler {
 
         JSONArray entityList;
 
-        entityList = (JSONArray) ResourcesHandler.loadJson("/entity/entities.json").get("availableEntities");
+        entityList = (JSONArray) ResourcesHandler.loadJson("/assets/entity/entities.json").get("availableEntities");
 
         for (int i=0; i<entityList.size(); i++)
         {
@@ -79,10 +77,10 @@ public class EntitiesHandler {
 
         JSONObject entityData;
 
-        entityData = ResourcesHandler.loadJson("/entity/" + entityID + "/entityData.json");
+        entityData = ResourcesHandler.loadJson("/assets/entity/" + entityID + "/entityData.json");
 
         if (entityData != null){
-            BufferedImage entitySprite = ResourcesHandler.loadImg("/entity/" + entityID + "/sprites.png");
+            BufferedImage entitySprite = ResourcesHandler.loadImg("/assets/entity/" + entityID + "/sprites.png");
             return new Entity(entityID, entityData, entitySprite);
         } else
         {
@@ -111,14 +109,14 @@ public class EntitiesHandler {
         for (SpawnedEntity entity: this.spawnedEntitiesList) {
             if(entity == null) continue;
 
-            entity.updateAnimation();
             entity.updatePosition();
+            entity.updateAnimation();
         }
     }
 
     public Entity getEntityType(String entityName) {
         if (this.entitiesHashMap.get(entityName) == null) {
-            System.out.println("[EntityHandler/ERROR] Failed to get entity with name:" + entityName);
+            System.out.println("[EntityHandler/ERROR] Failed to get net.oxyoksirotl.entity with name:" + entityName);
             System.exit(1);
         }
 

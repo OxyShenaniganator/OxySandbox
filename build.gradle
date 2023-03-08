@@ -12,10 +12,10 @@ repositories {
 sourceSets {
     main {
         java {
-            srcDirs = ['src']
+            srcDirs = ['src/main/java']
         }
         resources {
-            srcDirs = ['src/resources']
+            srcDirs = ['src/main/resource']
         }
     }
 }
@@ -30,7 +30,7 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
-        attributes "Main-Class": "main.Main"
+        attributes "Main-Class": "net.oxyoksirotl.Main"
     }
 
     from {

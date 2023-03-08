@@ -1,8 +1,8 @@
-package main;
+package net.oxyoksirotl;
 
-import input.KeyboardInputs;
-import main.entity.SpawnedEntity;
-import utils.Vector2D;
+import net.oxyoksirotl.input.KeyboardInputs;
+import net.oxyoksirotl.entity.SpawnedEntity;
+import net.oxyoksirotl.utils.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,14 +62,33 @@ public class GamePanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
         int scaledTileSize = tileSize*scalingSize;
+        int tileX;
+        int tileY;
+
+        int halfTileX;
+        int halfTileY;
 
         for (int i = -Game.tilesHandler.maxMapSize/2; i <= Game.tilesHandler.maxMapSize/2; i++) {
             for (int j = -Game.tilesHandler.maxMapSize/2; j <= Game.tilesHandler.maxMapSize/2; j++) {
 
+                tileX = i * scaledTileSize - Game.entitiesHandler.playerEntity().getxPos();
+                tileY = j * scaledTileSize - Game.entitiesHandler.playerEntity().getyPos();
+
+                halfTileX = i * scaledTileSize - scaledTileSize  / 2 - Game.entitiesHandler.playerEntity().getxPos();
+                halfTileY = j * scaledTileSize - scaledTileSize / 2 - Game.entitiesHandler.playerEntity().getyPos();
+
+
+                if (halfTileX + tileSize > Game.entitiesHandler.playerEntity().getxPos() - screenWidth &&
+                        halfTileX - tileSize < Game.entitiesHandler.playerEntity().getxPos() + screenWidth &&
+                        halfTileY + tileSize > Game.entitiesHandler.playerEntity().getyPos() - screenHeight &&
+                        halfTileY - tileSize < Game.entitiesHandler.playerEntity().getyPos() + screenHeight ) {
+
                     g2.drawImage(Game.tilesHandler.getTile(i, j).tileImage,
-                            i * scaledTileSize - Game.entitiesHandler.playerEntity().getxPos(), j * scaledTileSize - Game.entitiesHandler.playerEntity().getyPos(),
+                            halfTileX, halfTileY,
                             scaledTileSize, scaledTileSize, null);
 
+
+                }
             }
         }
 
@@ -77,7 +96,9 @@ public class GamePanel extends JPanel {
 
             if (entity.getEntityType() != "player") {
                 g2.drawImage(
-                        entity.getEntitySprite(), entity.getxPos() - Game.entitiesHandler.playerEntity().getxPos(), entity.getyPos() - Game.entitiesHandler.playerEntity().getyPos(),
+                        entity.getEntitySprite(),
+                        entity.getxPos() - Game.entitiesHandler.playerEntity().getxPos() + screenX,
+                        entity.getyPos() - Game.entitiesHandler.playerEntity().getyPos() + screenY,
                         entity.getEntityWidth() * scalingSize,
                         entity.getEntityHeight() * scalingSize, null);
 

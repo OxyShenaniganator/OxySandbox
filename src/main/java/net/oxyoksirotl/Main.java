@@ -1,4 +1,4 @@
-package main;
+package net.oxyoksirotl;
 
 public class Main {
 

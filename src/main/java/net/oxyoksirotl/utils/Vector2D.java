@@ -1,4 +1,4 @@
-package utils;
+package net.oxyoksirotl.utils;
 
 public class Vector2D {
 
@@ -18,7 +18,7 @@ public class Vector2D {
     }
 
     public void normalize() {
-        double normalizedLength = (float)(this.x + this.y)/1.5;
+        double normalizedLength = (float)(this.x + this.y)/2;
 
         this.x = (int)Math.round(normalizedLength);
         this.y = (int)Math.round(normalizedLength);
