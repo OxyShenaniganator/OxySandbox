@@ -1,5 +1,6 @@
 package net.oxyoksirotl;
 
+import net.oxyoksirotl.handler.ChunkHandler;
 import net.oxyoksirotl.handler.EntitiesHandler;
 import net.oxyoksirotl.handler.WorldTilesHandler;
 
@@ -9,6 +10,7 @@ public class Game implements Runnable{
     private GamePanel gamePanel;
     public static EntitiesHandler entitiesHandler;
     public static WorldTilesHandler tilesHandler;
+    public static ChunkHandler chunkHandler;
 
     private Thread gameThread;
     private final int setFPS = 60;
@@ -21,11 +23,14 @@ public class Game implements Runnable{
 
         entitiesHandler = new EntitiesHandler();
         tilesHandler = new WorldTilesHandler(gamePanel);
+        chunkHandler = new ChunkHandler(31, 31);
 
         gamePanel = new GamePanel();
         gameFrame = new GameFrame(gamePanel);
 
         entitiesHandler.setGamePanel(gamePanel);
+        chunkHandler.setGamePanel(gamePanel);
+        chunkHandler.populateChunks();
 
         System.out.println(entitiesHandler.entitiesHashMap);
 

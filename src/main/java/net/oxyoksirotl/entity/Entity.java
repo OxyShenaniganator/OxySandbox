@@ -19,7 +19,8 @@ public class Entity {
     int entityCol;
     int entityRow;
 
-    ArrayList<String> availableEntityTypes;
+    ArrayList<String> availableTypes;
+    ArrayList<String> entityTypes;
     String entityType;
 
     public Entity(String entityID, JSONObject entityData, BufferedImage entitySprite) {
@@ -32,16 +33,18 @@ public class Entity {
         this.entityHeight = (int)(long)((JSONArray)entityData.get("spriteSize")).get(1);
         this.entityCol = (int)(long)((JSONArray)entityData.get("spriteSize")).get(2);
         this.entityRow = (int)(long)((JSONArray)entityData.get("spriteSize")).get(3);
+        this.entityTypes = new ArrayList<>();
 
-        availableEntityTypes = new ArrayList<>();
+        availableTypes = new ArrayList<>();
         JSONArray typeArray = (JSONArray)entityData.get("entityType");
 
         if (typeArray != null) {
             for (Object o : typeArray) {
                 System.out.println("[Entity/INFO] Added entityType " + o + " to net.oxyoksirotl.entity" + this.entityName);
-                availableEntityTypes.add((String) o);
+                availableTypes.add((String) o);
             }
-            entityType = availableEntityTypes.get(0);
+            entityType = availableTypes.get(0);
+            entityTypes.add(availableTypes.get(0));
         }
 
         if (this.getClass().getName().equals("main.java.net.oxyoksirotl.entity.Entity")) {
@@ -90,8 +93,8 @@ public class Entity {
         return entityData;
     }
 
-    public ArrayList<String> getAvailableEntityTypes() {
-        return availableEntityTypes;
+    public ArrayList<String> getAvailableTypes() {
+        return availableTypes;
     }
 
     @Override

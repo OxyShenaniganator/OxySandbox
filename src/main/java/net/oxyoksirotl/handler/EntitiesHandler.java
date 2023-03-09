@@ -1,18 +1,17 @@
 package net.oxyoksirotl.handler;
 
+import net.oxyoksirotl.Game;
 import net.oxyoksirotl.GamePanel;
 import net.oxyoksirotl.entity.Entity;
 import net.oxyoksirotl.entity.SpawnedEntity;
+import net.oxyoksirotl.utils.Pos;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import net.oxyoksirotl.utils.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class EntitiesHandler {
 
@@ -24,15 +23,20 @@ public class EntitiesHandler {
     private boolean isSPressed = false;
     private boolean isDPressed = false;
 
-    private int vecYN = 0;
-    private int vecYP = 0;
-    private int vecXN = 0;
-    private int vecXP = 0;
+    // Player Velocity Vectors
+    private int playerVecYNegative = 0;
+    private int playerVecYPositive = 0;
+    private int playerVecXNegative = 0;
+    private int playerVecXPositive = 0;
+    private Vector2D playerVelocity = new Vector2D(0,0);
 
+    // Player Animation
     private int playerUpdateTick = 0;
     private int maxPlayerUpdateTick = 12;
 
-    private Vector2D playerVelocity = new Vector2D(0,0);
+    // Player Random Spawn;
+    private Random random;
+
 
     // Entities management
     public HashMap<String, Entity> entitiesHashMap;
@@ -49,6 +53,7 @@ public class EntitiesHandler {
 
         this.entitiesHashMap = new HashMap<>();
         this.spawnedEntitiesList = new ArrayList<>();
+        this.random = new Random();
         this.initEntity();
 
     }
@@ -93,7 +98,7 @@ public class EntitiesHandler {
     }
 
     public void spawnEntity(Entity baseEntity, int xPos, int yPos, String entityType) {
-        this.spawnedEntitiesList.add(new SpawnedEntity(baseEntity, xPos, -yPos, entityType));
+        this.spawnedEntitiesList.add(new SpawnedEntity(baseEntity, xPos, yPos, entityType));
         System.out.println("[EntityHandler/INFO] Spawned Entity " + baseEntity.getEntityName() + " of entityType " + entityType + " at: " + xPos + " , " + yPos);
 
     }
@@ -207,6 +212,26 @@ public class EntitiesHandler {
         }
         return null;
     }
+
+    public void spawnPlayer(Entity entity) {
+        if (playerEntity() == null) {
+
+            int playerChunkX = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkCol(),2) - 2;
+            int playerChunkY = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkRow(),2) - 2;
+            int playerX = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkSize(),2) - 2;
+            int playerY = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkSize(),2) - 2;
+
+            SpawnedEntity playerEntity = new SpawnedEntity(entity,
+                    Game.chunkHandler.toWorldXPos(playerChunkX, playerX),
+                    Game.chunkHandler.toWorldYPos(playerChunkY, playerY));
+
+            Game.chunkHandler.getChunk(playerChunkX,playerChunkY).insertEntity(playerEntity, playerX, playerY);
+
+            spawnedEntitiesList.add(playerEntity);
+
+        }
+    }
+
     public void checkPlayerInput() {
 
         if (this.playerEntity() != null) {
@@ -214,29 +239,29 @@ public class EntitiesHandler {
             int inputCount = 0;
 
             if (!this.isWPressed && !this.isSPressed) {
-                vecYP = 0;
-                vecYN = 0;
+                playerVecYPositive = 0;
+                playerVecYNegative = 0;
             }
 
             if (!this.isAPressed && !this.isDPressed) {
-                vecXP = 0;
-                vecXN = 0;
+                playerVecXPositive = 0;
+                playerVecXNegative = 0;
             }
 
-            if (this.isWPressed && vecYN <= this.playerEntity().getMaxSpeed()) {
-                vecYN += 1;
+            if (this.isWPressed && playerVecYNegative <= this.playerEntity().getMaxSpeed()) {
+                playerVecYNegative += 1;
                 inputCount += 1;
             }
-            if (this.isSPressed && vecYP <= this.playerEntity().getMaxSpeed()) {
-                vecYP += 1;
+            if (this.isSPressed && playerVecYPositive <= this.playerEntity().getMaxSpeed()) {
+                playerVecYPositive += 1;
                 inputCount += 1;
             }
-            if (this.isAPressed && vecXN <= this.playerEntity().getMaxSpeed()) {
-                vecXN += 1;
+            if (this.isAPressed && playerVecXNegative <= this.playerEntity().getMaxSpeed()) {
+                playerVecXNegative += 1;
                 inputCount += 1;
             }
-            if (this.isDPressed && vecXP <= this.playerEntity().getMaxSpeed()) {
-                vecXP += 1;
+            if (this.isDPressed && playerVecXPositive <= this.playerEntity().getMaxSpeed()) {
+                playerVecXPositive += 1;
                 inputCount += 1;
             }
 
@@ -245,7 +270,7 @@ public class EntitiesHandler {
     }
 
     private void changePlayerVelocity(int inputCount) {
-        playerVelocity.updateVector(vecXP - vecXN, vecYP - vecYN);
+        playerVelocity.updateVector(playerVecXPositive - playerVecXNegative, playerVecYPositive - playerVecYNegative);
 
         playerUpdateTick++;
 

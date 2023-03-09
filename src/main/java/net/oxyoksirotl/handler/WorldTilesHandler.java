@@ -20,12 +20,23 @@ public class WorldTilesHandler {
 
         this.gamePanel = gamePanel;
         this.availableTile = new ArrayList<>();
-        this.maxMapSize = 127;
+        this.maxMapSize = 257;
         this.generatedMap = new TileEntity[this.maxMapSize][this.maxMapSize];
 
         this.initTiles();
         // this.populateTile();
         this.generateMap();
+
+    }
+
+    public TileEntity tileDeterminer(int seed, int x, int y) {
+
+        double newX = x*0.07;
+        double newY = y*0.07;
+
+        if (OpenSimplex2S.noise2_ImproveX(seed, newX, newY) <= -0.2 ) return availableTile.get(0);
+        else if (OpenSimplex2S.noise2_ImproveX(seed, newX, newY) <= 0.08 ) return availableTile.get(1);
+        else return availableTile.get(2);
 
     }
 

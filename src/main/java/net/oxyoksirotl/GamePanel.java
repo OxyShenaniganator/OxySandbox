@@ -1,17 +1,21 @@
 package net.oxyoksirotl;
 
+import net.oxyoksirotl.entity.TileEntity;
 import net.oxyoksirotl.input.KeyboardInputs;
 import net.oxyoksirotl.entity.SpawnedEntity;
+import net.oxyoksirotl.utils.Pos;
 import net.oxyoksirotl.utils.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GamePanel extends JPanel {
 
-    private final int tileSize = 24;
-    private int scalingSize = 2;
-    private int resizedTileSize = tileSize * scalingSize;
+    public final int tileSize = 24;
+    public int scalingSize = 2;
+    public int resizedTileSize = tileSize * scalingSize;
 
     final int maxCol = 16;
     final int maxRow = 12;
@@ -49,6 +53,50 @@ public class GamePanel extends JPanel {
 
     }
 
+    public void renderChunks(int chunkX, int chunkY, Graphics2D graphics2D, HashMap<Pos, TileEntity> chunkTiles, HashMap<Pos, SpawnedEntity> chunkEntities) {
+
+        int worldXPos;
+        int worldYPos;
+
+        int playerXPos = Game.entitiesHandler.playerEntity().getWorldXPos();
+        int playerYPos = Game.entitiesHandler.playerEntity().getWorldYPos();
+        int scalingTileSize = tileSize * scalingSize;
+
+        for (Map.Entry<Pos, TileEntity> entry: chunkTiles.entrySet()) {
+            worldXPos = Game.chunkHandler.toWorldXPos(chunkX, entry.getKey().getXPos());
+            worldYPos = Game.chunkHandler.toWorldYPos(chunkY, entry.getKey().getYPos());
+            TileEntity tile = entry.getValue();
+
+            graphics2D.drawImage( tile.getTileImage(),
+                    worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+                    scalingTileSize, scalingTileSize, null
+            );
+        }
+
+        // Still need to use global rendering for entities. Chunk rendering might cause stuttering.
+
+//        for (Map.Entry<Pos, SpawnedEntity> entry: chunkEntities.entrySet()) {
+//            worldXPos = Game.chunkHandler.toWorldXPos(chunkX, entry.getKey().getXPos());
+//            worldYPos = Game.chunkHandler.toWorldYPos(chunkY, entry.getKey().getYPos());
+//            SpawnedEntity entity = entry.getValue();
+//
+//            if(entity.getEntityType() != "player") {
+//
+//                graphics2D.drawImage(entity.getEntitySprite(),
+//                        worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+//                        tileSize * scalingSize, tileSize * scalingSize, null
+//                );
+//            } else {
+//                graphics2D.drawImage(
+//                entity.getEntitySprite(), screenX - entity.getEntityWidth(), screenY - entity.getEntityHeight(),
+//                        entity.getEntityWidth() * scalingSize,
+//                        entity.getEntityHeight() * scalingSize, null);
+//
+//            }
+//        }
+
+    }
+
     public static void gameUpdate() {
         if (Game.entitiesHandler.spawnedEntitiesList.isEmpty()) {
             Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 0, 0, "player");
@@ -64,31 +112,40 @@ public class GamePanel extends JPanel {
         int scaledTileSize = tileSize*scalingSize;
         int tileX;
         int tileY;
+//
+//        int halfTileX;
+//        int halfTileY;
+//
+//        for (int i = 0; i <= Game.chunkHandler.getMaxChunkSize() -1; i++) {
+//            for (int j = 0; j <= Game.chunkHandler.getMaxChunkSize() -1; j++) {
+//
+//                tileX = i * scaledTileSize - Game.entitiesHandler.playerEntity().getWorldXPos();
+//                tileY = j * scaledTileSize - Game.entitiesHandler.playerEntity().getWorldYPos();
+//
+//                halfTileX = i * scaledTileSize - scaledTileSize  / 2 - Game.entitiesHandler.playerEntity().getWorldXPos();
+//                halfTileY = j * scaledTileSize - scaledTileSize / 2 - Game.entitiesHandler.playerEntity().getWorldYPos();
+//
+//                    g2.drawImage(Game.chunkHandler.getChunk(5,5).getTile(i,j).tileImage,
+//                            halfTileX, halfTileY,
+//                            scaledTileSize, scaledTileSize, null);
+//
+//            }
+//        }
 
-        int halfTileX;
-        int halfTileY;
+        int playerChunkX = Game.entitiesHandler.playerEntity().getLocatedChunkX();
+        int playerChunkY = Game.entitiesHandler.playerEntity().getLocatedChunkY();
 
-        for (int i = -Game.tilesHandler.maxMapSize/2; i <= Game.tilesHandler.maxMapSize/2; i++) {
-            for (int j = -Game.tilesHandler.maxMapSize/2; j <= Game.tilesHandler.maxMapSize/2; j++) {
+        for (int i = playerChunkX -1; i <= playerChunkX + 1; i++) {
+            for (int j = playerChunkY -1; j <= playerChunkY +1; j++) {
 
-                tileX = i * scaledTileSize - Game.entitiesHandler.playerEntity().getxPos();
-                tileY = j * scaledTileSize - Game.entitiesHandler.playerEntity().getyPos();
+                if (i<0 || i >= Game.chunkHandler.getMaxChunkCol()
+                || j<0 || j >= Game.chunkHandler.getMaxChunkRow()) continue;
 
-                halfTileX = i * scaledTileSize - scaledTileSize  / 2 - Game.entitiesHandler.playerEntity().getxPos();
-                halfTileY = j * scaledTileSize - scaledTileSize / 2 - Game.entitiesHandler.playerEntity().getyPos();
+                HashMap<Pos, TileEntity>  processChunkTiles = Game.chunkHandler.getChunk(i,j).getChunkTiles();
+                HashMap<Pos, SpawnedEntity> processChunkEntities = Game.chunkHandler.getChunk(i,j).getChunkEntities();
 
+                renderChunks(i, j, g2, processChunkTiles, processChunkEntities);
 
-                if (halfTileX + tileSize > Game.entitiesHandler.playerEntity().getxPos() - screenWidth &&
-                        halfTileX - tileSize < Game.entitiesHandler.playerEntity().getxPos() + screenWidth &&
-                        halfTileY + tileSize > Game.entitiesHandler.playerEntity().getyPos() - screenHeight &&
-                        halfTileY - tileSize < Game.entitiesHandler.playerEntity().getyPos() + screenHeight ) {
-
-                    g2.drawImage(Game.tilesHandler.getTile(i, j).tileImage,
-                            halfTileX, halfTileY,
-                            scaledTileSize, scaledTileSize, null);
-
-
-                }
             }
         }
 
@@ -97,15 +154,15 @@ public class GamePanel extends JPanel {
             if (entity.getEntityType() != "player") {
                 g2.drawImage(
                         entity.getEntitySprite(),
-                        entity.getxPos() - Game.entitiesHandler.playerEntity().getxPos() + screenX,
-                        entity.getyPos() - Game.entitiesHandler.playerEntity().getyPos() + screenY,
+                        entity.getWorldXPos() - entity.getEntityWidth() - Game.entitiesHandler.playerEntity().getWorldXPos() + screenX,
+                        entity.getWorldYPos() - entity.getEntityHeight() - Game.entitiesHandler.playerEntity().getWorldYPos() + screenY,
                         entity.getEntityWidth() * scalingSize,
                         entity.getEntityHeight() * scalingSize, null);
 
             } else {
 
                 g2.drawImage(
-                        entity.getEntitySprite(), screenX, screenY,
+                        entity.getEntitySprite(), screenX - entity.getEntityWidth(), screenY - entity.getEntityHeight(),
                         entity.getEntityWidth() * scalingSize,
                         entity.getEntityHeight() * scalingSize, null);
 
