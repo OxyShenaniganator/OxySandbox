@@ -56,7 +56,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
         this.maxSpeed = 2;
 
-        this.animSpeed = 10;
+        this.animSpeed = 20;
         this.animTick = 0;
         this.animIndex = 2;
         this.animChange = 1;

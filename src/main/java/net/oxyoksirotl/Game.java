@@ -13,7 +13,7 @@ public class Game implements Runnable{
     public static ChunkHandler chunkHandler;
 
     private Thread gameThread;
-    private final int setFPS = 60;
+    private final int setFPS = 120;
     private final int setUPS = 200;
 
     private int frames = 0;
@@ -21,9 +21,9 @@ public class Game implements Runnable{
 
     public Game() {
 
+        chunkHandler = new ChunkHandler(101, 101);
         entitiesHandler = new EntitiesHandler();
         tilesHandler = new WorldTilesHandler(gamePanel);
-        chunkHandler = new ChunkHandler(31, 31);
 
         gamePanel = new GamePanel();
         gameFrame = new GameFrame(gamePanel);
@@ -31,6 +31,8 @@ public class Game implements Runnable{
         entitiesHandler.setGamePanel(gamePanel);
         chunkHandler.setGamePanel(gamePanel);
         chunkHandler.populateChunks();
+
+        entitiesHandler.spawnPlayer(entitiesHandler.entitiesHashMap.get("arcanine"));
 
         System.out.println(entitiesHandler.entitiesHashMap);
 

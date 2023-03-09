@@ -223,7 +223,7 @@ public class EntitiesHandler {
 
             SpawnedEntity playerEntity = new SpawnedEntity(entity,
                     Game.chunkHandler.toWorldXPos(playerChunkX, playerX),
-                    Game.chunkHandler.toWorldYPos(playerChunkY, playerY));
+                    Game.chunkHandler.toWorldYPos(playerChunkY, playerY), "player");
 
             Game.chunkHandler.getChunk(playerChunkX,playerChunkY).insertEntity(playerEntity, playerX, playerY);
 

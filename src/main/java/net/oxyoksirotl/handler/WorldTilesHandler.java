@@ -31,10 +31,10 @@ public class WorldTilesHandler {
 
     public TileEntity tileDeterminer(int seed, int x, int y) {
 
-        double newX = x*0.07;
-        double newY = y*0.07;
+        double newX = x*0.03;
+        double newY = y*0.03;
 
-        if (OpenSimplex2S.noise2_ImproveX(seed, newX, newY) <= -0.2 ) return availableTile.get(0);
+        if (OpenSimplex2S.noise2_ImproveX(seed, newX, newY) <= -0.3 ) return availableTile.get(0);
         else if (OpenSimplex2S.noise2_ImproveX(seed, newX, newY) <= 0.08 ) return availableTile.get(1);
         else return availableTile.get(2);
 

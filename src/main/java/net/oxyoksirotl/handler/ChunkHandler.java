@@ -22,7 +22,7 @@ public class ChunkHandler {
     public ChunkHandler(int maxChunkCol, int maxChunkRow) {
         this.maxChunkCol = maxChunkCol;
         this.maxChunkRow = maxChunkRow;
-        this.maxChunkSize = 21;
+        this.maxChunkSize = 9;
         this.worldChunks = new Chunk[maxChunkCol][maxChunkRow];
         this.worldChunksReordered = new HashMap<>();
         this.seed = (int)Math.floor(10000 * Math.random());
@@ -62,7 +62,6 @@ public class ChunkHandler {
 
         int x = worldX % (maxChunkSize * scaledTileSize);
         int chunkX = (worldX - x) / (maxChunkSize * scaledTileSize);
-        System.out.println(x + " " + chunkX);
 
         int y = worldY % (maxChunkSize * scaledTileSize);
         int chunkY = (worldY - y) / (maxChunkSize * scaledTileSize);
@@ -101,9 +100,9 @@ public class ChunkHandler {
                 chunkPosY = j % maxChunkSize;
 
                 worldChunks[chunkPointerX][chunkPointerY].insertTile(Game.tilesHandler.tileDeterminer(seed, i, j), chunkPosX * scaledTileSize,chunkPosY * scaledTileSize);
-                System.out.println("Generated chunk tile: [" + chunkPosX + ", " +chunkPosY + "] at ["
-                + toWorldXPos(chunkPointerX, chunkPosX) + " (" + chunkPointerX +"), "
-                        + toWorldYPos(chunkPointerY, chunkPosY) + " (" + chunkPointerY +")]");
+//                System.out.println("Generated chunk tile: [" + chunkPosX + ", " +chunkPosY + "] at ["
+//                + toWorldXPos(chunkPointerX, chunkPosX) + " (" + chunkPointerX +"), "
+//                        + toWorldYPos(chunkPointerY, chunkPosY) + " (" + chunkPointerY +")]");
             }
         }
     }

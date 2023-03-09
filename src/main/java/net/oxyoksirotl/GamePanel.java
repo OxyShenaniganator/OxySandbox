@@ -3,6 +3,7 @@ package net.oxyoksirotl;
 import net.oxyoksirotl.entity.TileEntity;
 import net.oxyoksirotl.input.KeyboardInputs;
 import net.oxyoksirotl.entity.SpawnedEntity;
+import net.oxyoksirotl.utils.Chunk;
 import net.oxyoksirotl.utils.Pos;
 import net.oxyoksirotl.utils.Vector2D;
 
@@ -53,6 +54,7 @@ public class GamePanel extends JPanel {
 
     }
 
+
     public void renderChunks(int chunkX, int chunkY, Graphics2D graphics2D, HashMap<Pos, TileEntity> chunkTiles, HashMap<Pos, SpawnedEntity> chunkEntities) {
 
         int worldXPos;
@@ -99,7 +101,6 @@ public class GamePanel extends JPanel {
 
     public static void gameUpdate() {
         if (Game.entitiesHandler.spawnedEntitiesList.isEmpty()) {
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("arcanine"), 0, 0, "player");
             Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 100);
         }
     }
