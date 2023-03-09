@@ -34,9 +34,6 @@ public class GamePanel extends JPanel {
 
     private Vector2D playerVelocity = new Vector2D(vecXP-vecXN, vecYP-vecYN);
 
-    private int playerUpdateTick = 0;
-    private int maxPlayerUpdateTick = 10;
-
     KeyboardInputs inputs = new KeyboardInputs();
 
 

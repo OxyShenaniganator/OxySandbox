@@ -4,7 +4,6 @@ import net.oxyoksirotl.Game;
 import net.oxyoksirotl.GamePanel;
 import net.oxyoksirotl.entity.Entity;
 import net.oxyoksirotl.entity.SpawnedEntity;
-import net.oxyoksirotl.utils.Pos;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import net.oxyoksirotl.utils.Vector2D;
@@ -164,28 +163,6 @@ public class EntitiesHandler {
         isDPressed = DPressed;
     }
 
-    public void changePlayerXDelta(int xDelta, boolean isMovement) {
-
-        for(SpawnedEntity entity: this.spawnedEntitiesList) {
-            if (Objects.equals(entity.getEntityType(), "player")) {
-                entity.setxDelta(xDelta);
-                entity.setMoving(isMovement);
-                break;
-            }
-        }
-    }
-
-    public void changePlayerYDelta(int yDelta, boolean isMovement) {
-
-        for(SpawnedEntity entity: this.spawnedEntitiesList) {
-            if (Objects.equals(entity.getEntityType(), "player")) {
-                entity.setyDelta(yDelta);
-                entity.setMoving(isMovement);
-                break;
-            }
-        }
-    }
-
     public void updatePlayerVelocity(Vector2D velocity) {
         for(SpawnedEntity entity: this.spawnedEntitiesList) {
             if (Objects.equals(entity.getEntityType(), "player")) {
@@ -228,6 +205,8 @@ public class EntitiesHandler {
             Game.chunkHandler.getChunk(playerChunkX,playerChunkY).insertEntity(playerEntity, playerX, playerY);
 
             spawnedEntitiesList.add(playerEntity);
+            System.out.println("[EntitiesHandler/INFO] Player spawned at x: " + Game.chunkHandler.toWorldXPos(playerChunkX, playerX)
+            + ", y: " + Game.chunkHandler.toWorldYPos(playerChunkY, playerY));
 
         }
     }

@@ -13,7 +13,7 @@ public class Game implements Runnable{
     public static ChunkHandler chunkHandler;
 
     private Thread gameThread;
-    private final int setFPS = 120;
+    private final int setFPS = 200;
     private final int setUPS = 200;
 
     private int frames = 0;
@@ -21,7 +21,7 @@ public class Game implements Runnable{
 
     public Game() {
 
-        chunkHandler = new ChunkHandler(101, 101);
+        chunkHandler = new ChunkHandler(401, 401);
         entitiesHandler = new EntitiesHandler();
         tilesHandler = new WorldTilesHandler(gamePanel);
 
