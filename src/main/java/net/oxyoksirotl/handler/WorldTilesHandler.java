@@ -34,6 +34,8 @@ public class WorldTilesHandler {
 
         if (OpenSimplex2S.noise2_ImproveX(seed, newX, newY) <= -0.6 ) return availableTile.get(0);
         else if (OpenSimplex2S.noise2_ImproveX(seed, newX, newY) <= -0.3 ) return availableTile.get(1);
+        else if (OpenSimplex2S.noise2_ImproveX(seed * 2, newX, newY) <= 0.1 && Math.random() < 0.15) return availableTile.get(3);
+        else if (OpenSimplex2S.noise2_ImproveX(seed * 3, newX, newY) <= 0.1 && Math.random() < 0.15) return availableTile.get(4);
         else return availableTile.get(2);
 
     }

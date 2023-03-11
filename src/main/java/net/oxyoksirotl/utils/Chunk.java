@@ -44,6 +44,10 @@ public class Chunk {
     public void removeEntity(int x, int y) {
         chunkEntities.remove(new Pos(x,y));
     }
+    public void moveEntity(SpawnedEntity entity, int x, int y) {
+        chunkEntities.remove(new Pos(entity.getChunkXPos(),entity.getChunkYPos()));
+        chunkEntities.put(new Pos(x,y), entity);
+    }
 
     public SpawnedEntity getEntity(int x, int y) {
         return chunkEntities.get(new Pos(x,y));
@@ -55,5 +59,33 @@ public class Chunk {
 
     public HashMap<Pos, SpawnedEntity> getChunkEntities() {
         return chunkEntities;
+    }
+
+
+    // Getter
+    public int getChunkX() {
+        return chunkX;
+    }
+
+    public int getChunkY() {
+        return chunkY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Chunk chunk = (Chunk) o;
+
+        if (chunkX != chunk.chunkX) return false;
+        return chunkY == chunk.chunkY;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chunkX;
+        result = 31 * result + chunkY;
+        return result;
     }
 }

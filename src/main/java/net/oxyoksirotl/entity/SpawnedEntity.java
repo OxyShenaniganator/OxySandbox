@@ -3,7 +3,9 @@ package net.oxyoksirotl.entity;
 import net.oxyoksirotl.Game;
 import net.oxyoksirotl.handler.AnimationsHandler;
 import net.oxyoksirotl.utils.Pos;
+import org.json.simple.JSONArray;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
@@ -37,8 +39,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
 
     private final HashMap<String, ArrayList<BufferedImage>> animationStorage;
-    private final HashMap<String, HashMap<Integer, Integer>> collisionBox;
-
+    private final Rectangle collisionBox;
 
     public SpawnedEntity(Entity entityType, int xPos, int yPos) {
         this(entityType, xPos, yPos, "default");
@@ -65,7 +66,12 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
         this.isMoving = false;
 
-        this.collisionBox = new HashMap<>();
+        int collisionX = ((Long)((JSONArray)this.entityData.get("collisionSize")).get(0)).intValue();
+        int collisionY = ((Long)((JSONArray)this.entityData.get("collisionSize")).get(1)).intValue();
+        int collisionWidth = ((Long)((JSONArray)this.entityData.get("collisionSize")).get(2)).intValue();
+        int collisionHeight = ((Long)((JSONArray)this.entityData.get("collisionSize")).get(3)).intValue();
+
+        this.collisionBox = new Rectangle(collisionX, collisionY, collisionWidth, collisionHeight);
         this.animationStorage = AnimationsHandler.initEntityAnimation(this);
         System.out.println(this.animationStorage);
 
@@ -81,7 +87,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
         this.worldYPos += this.yDelta;
         this.updateDelta();
         
-        updateChunkPos();
+        // updateChunkPos();
     }
     
     public void updateChunkPos() {

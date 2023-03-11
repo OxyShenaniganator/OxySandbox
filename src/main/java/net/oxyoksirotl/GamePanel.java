@@ -9,6 +9,7 @@ import net.oxyoksirotl.utils.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,8 +52,65 @@ public class GamePanel extends JPanel {
 
     }
 
+    public void renderChunks(Graphics2D graphics2D, ArrayList<Chunk> processChunks) {
 
+        int worldXPos;
+        int worldYPos;
+
+        int playerXPos = Game.entitiesHandler.playerEntity().getWorldXPos();
+        int playerYPos = Game.entitiesHandler.playerEntity().getWorldYPos();
+        int scalingTileSize = tileSize * scalingSize;
+
+        HashMap<Pos, SpawnedEntity> processEntities = new HashMap<>();
+        ArrayList<SpawnedEntity> sortedEntities = new ArrayList<>();
+
+        // Render tiles one by one, while adding entities to a seperate list
+        for(Chunk chunk: processChunks) {
+            for (Map.Entry<Pos, TileEntity> entry: chunk.getChunkTiles().entrySet()) {
+                worldXPos = Game.chunkHandler.toWorldXPos(chunk.getChunkX(), entry.getKey().getXPos());
+                worldYPos = Game.chunkHandler.toWorldYPos(chunk.getChunkY(), entry.getKey().getYPos());
+                TileEntity tile = entry.getValue();
+
+                graphics2D.drawImage( tile.getTileImage(),
+                        worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+                        scalingTileSize, scalingTileSize, null
+                );
+            }
+
+            for (Map.Entry<Pos, SpawnedEntity> entry: chunk.getChunkEntities().entrySet()) {
+                sortedEntities.add(entry.getValue());
+            }
+        }
+
+        // Sort the entities array by y value
+
+        sortedEntities.sort(Game.entitiesHandler.spawnedEntityComparator);
+
+        for (SpawnedEntity entity: sortedEntities) {
+            worldXPos = entity.getWorldXPos();
+            worldYPos = entity.getWorldYPos();
+
+            if(entity.getEntityType() != "player") {
+
+                graphics2D.drawImage(entity.getEntitySprite(),
+                        worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+                        entity.getEntityWidth() * scalingSize, entity.getEntityHeight() * scalingSize, null
+                );
+            } else {
+                graphics2D.drawImage(
+                        entity.getEntitySprite(), screenX - entity.getEntityWidth()/2, screenY - entity.getEntityHeight()/2,
+                        entity.getEntityWidth() * scalingSize,
+                        entity.getEntityHeight() * scalingSize, null);
+
+            }
+        }
+    }
+    @Deprecated
     public void renderChunks(int chunkX, int chunkY, Graphics2D graphics2D, HashMap<Pos, TileEntity> chunkTiles, HashMap<Pos, SpawnedEntity> chunkEntities) {
+
+        if (Game.entitiesHandler.playerEntity() == null) {
+            System.out.println("Warning! Player entity doesn't exist!");
+        }
 
         int worldXPos;
         int worldYPos;
@@ -74,31 +132,33 @@ public class GamePanel extends JPanel {
 
         // Still need to use global rendering for entities. Chunk rendering might cause stuttering.
 
-//        for (Map.Entry<Pos, SpawnedEntity> entry: chunkEntities.entrySet()) {
-//            worldXPos = Game.chunkHandler.toWorldXPos(chunkX, entry.getKey().getXPos());
-//            worldYPos = Game.chunkHandler.toWorldYPos(chunkY, entry.getKey().getYPos());
-//            SpawnedEntity entity = entry.getValue();
-//
-//            if(entity.getEntityType() != "player") {
-//
-//                graphics2D.drawImage(entity.getEntitySprite(),
-//                        worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
-//                        tileSize * scalingSize, tileSize * scalingSize, null
-//                );
-//            } else {
-//                graphics2D.drawImage(
-//                entity.getEntitySprite(), screenX - entity.getEntityWidth(), screenY - entity.getEntityHeight(),
-//                        entity.getEntityWidth() * scalingSize,
-//                        entity.getEntityHeight() * scalingSize, null);
-//
-//            }
-//        }
+        for (Map.Entry<Pos, SpawnedEntity> entry: chunkEntities.entrySet()) {
+            worldXPos = Game.chunkHandler.toWorldXPos(chunkX, entry.getKey().getXPos());
+            worldYPos = Game.chunkHandler.toWorldYPos(chunkY, entry.getKey().getYPos());
+            SpawnedEntity entity = entry.getValue();
+
+            if(entity.getEntityType() != "player") {
+
+                graphics2D.drawImage(entity.getEntitySprite(),
+                        worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+                        entity.getEntityWidth() * scalingSize, entity.getEntityHeight() * scalingSize, null
+                );
+            } else {
+                graphics2D.drawImage(
+                entity.getEntitySprite(), screenX - entity.getEntityWidth(), screenY - entity.getEntityHeight(),
+                        entity.getEntityWidth() * scalingSize,
+                        entity.getEntityHeight() * scalingSize, null);
+
+            }
+        }
 
     }
 
     public static void gameUpdate() {
-        if (Game.entitiesHandler.spawnedEntitiesList.isEmpty()) {
-            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"), 100, 100);
+        if (Game.entitiesHandler.spawnedEntitiesList.size() < 2) {
+            Game.entitiesHandler.spawnEntity(Game.entitiesHandler.getEntityType("houndoom"),
+                    Game.entitiesHandler.playerEntity().getWorldXPos() + 100, Game.entitiesHandler.playerEntity().getWorldYPos() + 100);
+
         }
     }
 
@@ -132,6 +192,7 @@ public class GamePanel extends JPanel {
 
         int playerChunkX = Game.entitiesHandler.playerEntity().getLocatedChunkX();
         int playerChunkY = Game.entitiesHandler.playerEntity().getLocatedChunkY();
+        ArrayList<Chunk> processChunks = new ArrayList<>();
 
         for (int i = playerChunkX -1; i <= playerChunkX + 1; i++) {
             for (int j = playerChunkY -1; j <= playerChunkY +1; j++) {
@@ -139,32 +200,31 @@ public class GamePanel extends JPanel {
                 if (i<0 || i >= Game.chunkHandler.getMaxChunkCol()
                 || j<0 || j >= Game.chunkHandler.getMaxChunkRow()) continue;
 
-                HashMap<Pos, TileEntity>  processChunkTiles = Game.chunkHandler.getChunk(i,j).getChunkTiles();
-                HashMap<Pos, SpawnedEntity> processChunkEntities = Game.chunkHandler.getChunk(i,j).getChunkEntities();
-
-                renderChunks(i, j, g2, processChunkTiles, processChunkEntities);
+                processChunks.add(Game.chunkHandler.getChunk(i,j));
 
             }
         }
 
+        renderChunks(g2, processChunks);
+
         for (SpawnedEntity entity: Game.entitiesHandler.spawnedEntitiesList) {
 
-            if (entity.getEntityType() != "player") {
-                g2.drawImage(
-                        entity.getEntitySprite(),
-                        entity.getWorldXPos() - entity.getEntityWidth() - Game.entitiesHandler.playerEntity().getWorldXPos() + screenX,
-                        entity.getWorldYPos() - entity.getEntityHeight() - Game.entitiesHandler.playerEntity().getWorldYPos() + screenY,
-                        entity.getEntityWidth() * scalingSize,
-                        entity.getEntityHeight() * scalingSize, null);
-
-            } else {
-
-                g2.drawImage(
-                        entity.getEntitySprite(), screenX - entity.getEntityWidth(), screenY - entity.getEntityHeight(),
-                        entity.getEntityWidth() * scalingSize,
-                        entity.getEntityHeight() * scalingSize, null);
-
-            }
+//            if (entity.getEntityType() != "player") {
+//                g2.drawImage(
+//                        entity.getEntitySprite(),
+//                        entity.getWorldXPos() - entity.getEntityWidth()/2 - Game.entitiesHandler.playerEntity().getWorldXPos() + screenX,
+//                        entity.getWorldYPos() - entity.getEntityHeight()/2 - Game.entitiesHandler.playerEntity().getWorldYPos() + screenY,
+//                        entity.getEntityWidth() * scalingSize,
+//                        entity.getEntityHeight() * scalingSize, null);
+//
+//            } else {
+//
+//                g2.drawImage(
+//                        entity.getEntitySprite(), screenX - entity.getEntityWidth()/2, screenY - entity.getEntityHeight()/2,
+//                        entity.getEntityWidth() * scalingSize,
+//                        entity.getEntityHeight() * scalingSize, null);
+//
+//            }
         }
     }
 }

@@ -4,6 +4,7 @@ import net.oxyoksirotl.Game;
 import net.oxyoksirotl.GamePanel;
 import net.oxyoksirotl.entity.Entity;
 import net.oxyoksirotl.entity.SpawnedEntity;
+import net.oxyoksirotl.utils.Pos;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import net.oxyoksirotl.utils.Vector2D;
@@ -41,7 +42,7 @@ public class EntitiesHandler {
     public HashMap<String, Entity> entitiesHashMap;
     public ArrayList<SpawnedEntity> spawnedEntitiesList;
 
-    Comparator<SpawnedEntity> spawnedEntityComparator = new Comparator<SpawnedEntity>() {
+    public Comparator<SpawnedEntity> spawnedEntityComparator = new Comparator<SpawnedEntity>() {
         @Override
         public int compare(SpawnedEntity entity1, SpawnedEntity entity2) {
             return entity1.compareTo(entity2);
@@ -116,6 +117,9 @@ public class EntitiesHandler {
             entity.updatePosition();
             entity.updateAnimation();
         }
+
+        updateEntityChunkPos();
+
     }
 
     public Entity getEntityType(String entityName) {
@@ -126,6 +130,44 @@ public class EntitiesHandler {
 
         return this.entitiesHashMap.get(entityName);
 
+    }
+
+    public void updateEntityChunkPos() {
+
+        int prevInChunkXPos;
+        int prevInChunkYPos;
+        int prevAtChunkX;
+        int prevAtChunkY;
+
+        int newInChunkXPos;
+        int newInChunkYPos;
+        int newAtChunkX;
+        int newAtChunkY;
+
+        Pos[] chunkPos;
+
+        for (SpawnedEntity entity: spawnedEntitiesList) {
+            prevInChunkXPos = entity.getChunkXPos();
+            prevInChunkYPos = entity.getChunkYPos();
+            prevAtChunkX = entity.getLocatedChunkX();
+            prevAtChunkY = entity.getLocatedChunkY();
+
+            chunkPos = Game.chunkHandler.toChunkPos(entity.getWorldXPos(), entity.getWorldYPos());
+
+            newInChunkXPos = chunkPos[1].getXPos();
+            newInChunkYPos = chunkPos[1].getYPos();
+            newAtChunkX = chunkPos[0].getXPos();
+            newAtChunkY = chunkPos[0].getYPos();
+
+            Game.chunkHandler.getChunk(prevAtChunkX, prevAtChunkY).removeEntity(prevInChunkXPos,prevInChunkYPos);
+            Game.chunkHandler.getChunk(newAtChunkX, newAtChunkY).insertEntity(entity, newInChunkXPos, newInChunkYPos);
+
+            entity.setChunkXPos(newInChunkXPos);
+            entity.setChunkYPos(newInChunkYPos);
+            entity.setLocatedChunkX(newAtChunkX);
+            entity.setLocatedChunkY(newAtChunkY);
+
+        }
     }
 
     // Player Entity Control
@@ -202,9 +244,9 @@ public class EntitiesHandler {
                     Game.chunkHandler.toWorldXPos(playerChunkX, playerX),
                     Game.chunkHandler.toWorldYPos(playerChunkY, playerY), "player");
 
+            spawnedEntitiesList.add(playerEntity);
             Game.chunkHandler.getChunk(playerChunkX,playerChunkY).insertEntity(playerEntity, playerX, playerY);
 
-            spawnedEntitiesList.add(playerEntity);
             System.out.println("[EntitiesHandler/INFO] Player spawned at x: " + Game.chunkHandler.toWorldXPos(playerChunkX, playerX)
             + ", y: " + Game.chunkHandler.toWorldYPos(playerChunkY, playerY));
 
@@ -264,4 +306,7 @@ public class EntitiesHandler {
             playerUpdateTick = 0;
         }
     }
+
+    // Collision handling
+
 }
