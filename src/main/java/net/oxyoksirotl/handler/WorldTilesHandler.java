@@ -43,16 +43,19 @@ public class WorldTilesHandler {
     public void initTiles() {
 
         JSONArray tileList;
+        JSONArray tileCollision;
         BufferedImage tileImg;
 
         tileList = (JSONArray) ResourcesHandler.loadJson("/assets/tiles/tiles.json").get("availableTiles");
 
         for (int i=0; i<tileList.size(); i++)
         {
-            tileImg = ResourcesHandler.loadImg("/assets/tiles/" + tileList.get(i).toString() + ".png");
+            tileImg = ResourcesHandler.loadImg("/assets/tiles/" + tileList.get(i).toString() + "/" + tileList.get(i).toString() + ".png");
+            tileCollision = (JSONArray) ResourcesHandler.loadJson("/assets/tiles/" + tileList.get(i).toString() + "/tileSettings.json").get("enableCollision");
             for(int j=0; j<tileImg.getHeight()/24; j++) {
                 for (int k=0; k<tileImg.getWidth()/24; k++) {
-                    this.availableTile.add(new TileEntity(tileImg.getSubimage(k*24,j*24,24,24), false));
+                    this.availableTile.add(new TileEntity(tileImg.getSubimage(k*24,j*24,24,24), (boolean)tileCollision.get(k)));
+                    System.out.println((boolean)tileCollision.get(k));
                 }
             }
         }

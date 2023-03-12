@@ -47,8 +47,8 @@ public class GamePanel extends JPanel {
         this.setPreferredSize(screenSize);
         this.setDoubleBuffered(true);
 
-        this.screenX = screenWidth/2 - (tileSize/2);
-        this.screenY = screenHeight/2 - (tileSize/2);
+        this.screenX = screenWidth/2;
+        this.screenY = screenHeight/2;
 
     }
 
@@ -72,7 +72,7 @@ public class GamePanel extends JPanel {
                 TileEntity tile = entry.getValue();
 
                 graphics2D.drawImage( tile.getTileImage(),
-                        worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+                        (worldXPos - playerXPos) * scalingSize + screenX, (worldYPos - playerYPos) * scalingSize + screenY,
                         scalingTileSize, scalingTileSize, null
                 );
             }
@@ -93,12 +93,12 @@ public class GamePanel extends JPanel {
             if(entity.getEntityType() != "player") {
 
                 graphics2D.drawImage(entity.getEntitySprite(),
-                        worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+                        (worldXPos - playerXPos) * scalingSize + screenX, (worldYPos - playerYPos) * scalingSize + screenY,
                         entity.getEntityWidth() * scalingSize, entity.getEntityHeight() * scalingSize, null
                 );
             } else {
                 graphics2D.drawImage(
-                        entity.getEntitySprite(), screenX - entity.getEntityWidth()/2, screenY - entity.getEntityHeight()/2,
+                        entity.getEntitySprite(), screenX - entity.getEntityWidth(), screenY - entity.getEntityHeight(),
                         entity.getEntityWidth() * scalingSize,
                         entity.getEntityHeight() * scalingSize, null);
 
@@ -125,7 +125,7 @@ public class GamePanel extends JPanel {
             TileEntity tile = entry.getValue();
 
             graphics2D.drawImage( tile.getTileImage(),
-                    worldXPos - playerXPos + screenX, worldYPos - playerYPos + screenY,
+                    worldXPos * scalingSize - playerXPos + screenX, worldYPos * scalingSize - playerYPos + screenY,
                     scalingTileSize, scalingTileSize, null
             );
         }
@@ -145,7 +145,7 @@ public class GamePanel extends JPanel {
                 );
             } else {
                 graphics2D.drawImage(
-                entity.getEntitySprite(), screenX - entity.getEntityWidth(), screenY - entity.getEntityHeight(),
+                entity.getEntitySprite(), screenX, screenY,
                         entity.getEntityWidth() * scalingSize,
                         entity.getEntityHeight() * scalingSize, null);
 

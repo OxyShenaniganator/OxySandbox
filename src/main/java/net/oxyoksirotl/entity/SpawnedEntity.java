@@ -3,6 +3,7 @@ package net.oxyoksirotl.entity;
 import net.oxyoksirotl.Game;
 import net.oxyoksirotl.handler.AnimationsHandler;
 import net.oxyoksirotl.utils.Pos;
+import net.oxyoksirotl.utils.enums.Movement;
 import org.json.simple.JSONArray;
 
 import java.awt.*;
@@ -40,6 +41,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
     private final HashMap<String, ArrayList<BufferedImage>> animationStorage;
     private final Rectangle collisionBox;
+    private Movement movement;
 
     public SpawnedEntity(Entity entityType, int xPos, int yPos) {
         this(entityType, xPos, yPos, "default");
@@ -55,7 +57,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
         this.xDelta = 0;
         this.yDelta = 0;
 
-        this.maxSpeed = 2;
+        this.maxSpeed = 1;
 
         this.animSpeed = 30;
         this.animTick = 0;
@@ -65,6 +67,7 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
         this.currentAnimation = "S";
 
         this.isMoving = false;
+        this.movement = Movement.IDLE;
 
         int collisionX = ((Long)((JSONArray)this.entityData.get("collisionSize")).get(0)).intValue();
         int collisionY = ((Long)((JSONArray)this.entityData.get("collisionSize")).get(1)).intValue();
@@ -125,22 +128,54 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
     }
 
-    public void updateAnimation() {
+    public void updateMovement() {
 
         this.lastAnimation = this.currentAnimation;
+
         if (this.xDelta < 0) {
-            if (this.yDelta < 0) { this.currentAnimation = "WA";}
-            else if (this.yDelta == 0) { this.currentAnimation = "A"; }
-            else { this.currentAnimation = "SA"; }
+            if (this.yDelta < 0) {
+                this.movement = Movement.UP_LEFT;
+//                this.currentAnimation = "WA";
+            }
+            else if (this.yDelta == 0) {
+                this.movement = Movement.LEFT;
+//                this.currentAnimation = "A";
+            }
+            else {
+                this.movement = Movement.DOWN_LEFT;
+//                this.currentAnimation = "SA";
+            }
         } else if (this.xDelta == 0) {
-            if (this.yDelta < 0) this.currentAnimation = "W";
-            else if (this.yDelta == 0) this.currentAnimation = this.lastAnimation;
-            else this.currentAnimation = "S";
+            if (this.yDelta < 0) {
+                this.movement = Movement.UP;
+//                this.currentAnimation = "W";
+            }
+            else if (this.yDelta == 0) {
+                this.movement = Movement.IDLE;
+                this.currentAnimation = this.lastAnimation;
+            }
+            else {
+                this.movement = Movement.DOWN;
+//                this.currentAnimation = "S";
+            }
         } else {
-            if (this.yDelta < 0) this.currentAnimation = "WD";
-            else if (this.yDelta == 0) this.currentAnimation = "D";
-            else this.currentAnimation = "SD";
+            if (this.yDelta < 0) {
+                this.movement = Movement.UP_RIGHT;
+//                this.currentAnimation = "WD";
+            }
+            else if (this.yDelta == 0){
+                this.movement = Movement.RIGHT;
+//                this.currentAnimation = "D";
+            }
+            else {
+                this.movement = Movement.DOWN_RIGHT;
+//                this.currentAnimation = "SD";
+            }
         }
+        if(this.movement != Movement.IDLE) {
+            this.currentAnimation = this.movement.animationID;
+        }
+
     }
 
     public BufferedImage getEntitySprite() {
@@ -240,9 +275,15 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
         isMoving = moving;
     }
 
+    public Rectangle getCollisionBox() {
+        return collisionBox;
+    }
+
+    public Movement getMovement() {
+        return movement;
+    }
+
     // Comparator
-
-
     @Override
     public String toString() {
         return "{" + "entityID=" + entityID + '\'' +
@@ -251,6 +292,39 @@ public class SpawnedEntity extends Entity implements Comparable<SpawnedEntity>{
 
     @Override
     public int compareTo(SpawnedEntity spawnedEntity) {
-        return Integer.compare(this.getWorldYPos(), spawnedEntity.getWorldYPos());
+
+        int thisCollisionMiddlePointX = this.worldXPos + this.collisionBox.x + this.collisionBox.width/2;
+        int thisCollisionMiddlePointY = this.worldYPos + this.collisionBox.y + this.collisionBox.height/2;
+        int collisionMiddlePointX = spawnedEntity.getWorldXPos() + spawnedEntity.getCollisionBox().x + spawnedEntity.getCollisionBox().width/2;
+        int collisionMiddlePointY = spawnedEntity.getWorldYPos() + spawnedEntity.getCollisionBox().y + spawnedEntity.getCollisionBox().height/2;
+
+        return Integer.compare(thisCollisionMiddlePointY, collisionMiddlePointY);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        SpawnedEntity entity = (SpawnedEntity) o;
+
+        if (locatedChunkX != entity.locatedChunkX) return false;
+        if (locatedChunkY != entity.locatedChunkY) return false;
+        if (chunkXPos != entity.chunkXPos) return false;
+        if (chunkYPos != entity.chunkYPos) return false;
+        if (worldXPos != entity.worldXPos) return false;
+        if (worldYPos != entity.worldYPos) return false;
+        if (!animationStorage.equals(entity.animationStorage)) return false;
+        return collisionBox.equals(entity.collisionBox);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + worldXPos;
+        result = 31 * result + worldYPos;
+        result = 31 * result + animationStorage.hashCode();
+        return result;
     }
 }

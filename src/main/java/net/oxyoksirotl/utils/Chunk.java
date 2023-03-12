@@ -30,9 +30,19 @@ public class Chunk {
     }
 
     public TileEntity getTile(int x, int y) {
-        TileEntity tile = chunkTiles.get(new Pos(x,y));
-        if (tile == null) System.out.println("Tile:"+ x + ", " + y);
-        return tile;
+
+        int newX = (int)Math.floor(x/24) * 24;
+        int newY = (int)Math.floor(y/24) * 24;
+
+        return chunkTiles.get(new Pos(newX,newY));
+    }
+
+    public TileEntity getTile(Pos pos) {
+
+        int newX = (int)Math.floor(pos.getXPos()/24) * 24;
+        int newY = (int)Math.floor(pos.getYPos()/24) * 24;
+        System.out.println("Getting tiles: " + Game.chunkHandler.toWorldXPos(chunkX, newX) + " " + Game.chunkHandler.toWorldXPos(chunkY, newY));
+        return chunkTiles.get(new Pos(newX, newY));
     }
 
     public void insertEntity(SpawnedEntity spawnedEntity, int x, int y) {

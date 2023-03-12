@@ -115,7 +115,7 @@ public class EntitiesHandler {
             if(entity == null) continue;
 
             entity.updatePosition();
-            entity.updateAnimation();
+            entity.updateMovement();
         }
 
         updateEntityChunkPos();
@@ -205,22 +205,18 @@ public class EntitiesHandler {
         isDPressed = DPressed;
     }
 
-    public void updatePlayerVelocity(Vector2D velocity) {
-        for(SpawnedEntity entity: this.spawnedEntitiesList) {
-            if (Objects.equals(entity.getEntityType(), "player")) {
+    public void updateVelocity(SpawnedEntity entity, Vector2D velocity) {
 
-                entity.setxDelta(velocity.getX());
-                entity.setyDelta(velocity.getY());
+        entity.setxDelta(velocity.getX());
+        entity.setyDelta(velocity.getY());
+        entity.setMoving(true);
 
-                if(velocity.getX() == 0 && velocity.getY() == 0) {
-                    entity.setMoving(false);
-                    break;
-                }
-
-                entity.setMoving(true);
-                break;
-            }
+        if(velocity.getX() == 0 && velocity.getY() == 0) {
+            entity.setMoving(false);
         }
+
+        checkTile(entity);
+
     }
 
     public SpawnedEntity playerEntity() {
@@ -237,8 +233,8 @@ public class EntitiesHandler {
 
             int playerChunkX = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkCol(),2) - 2;
             int playerChunkY = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkRow(),2) - 2;
-            int playerX = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkSize(),2) - 2;
-            int playerY = random.nextInt(5) + Math.floorDiv(Game.chunkHandler.getMaxChunkSize(),2) - 2;
+            int playerX = Math.floorDiv(Game.chunkHandler.getMaxChunkSize(),2) * gamePanel.tileSize;
+            int playerY = Math.floorDiv(Game.chunkHandler.getMaxChunkSize(),2) * gamePanel.tileSize;
 
             SpawnedEntity playerEntity = new SpawnedEntity(entity,
                     Game.chunkHandler.toWorldXPos(playerChunkX, playerX),
@@ -301,12 +297,42 @@ public class EntitiesHandler {
                 playerVelocity.normalize();
             }
 
-            this.updatePlayerVelocity(playerVelocity);
+            this.updateVelocity(playerEntity(), playerVelocity);
 
             playerUpdateTick = 0;
         }
     }
 
     // Collision handling
+
+    public void checkTile(SpawnedEntity entity) {
+
+        int worldXPos = entity.getWorldXPos() + entity.getxDelta();
+        int worldYPos = entity.getWorldYPos() + entity.getyDelta();
+
+        int entitiesLeftWorldX = worldXPos + entity.getCollisionBox().x;
+        int entitiesRightWorldX = entitiesLeftWorldX + entity.getCollisionBox().width;
+        int entitiesTopWorldY = worldYPos + entity.getCollisionBox().y;
+        int entitiesBottomWorldY = entitiesTopWorldY + entity.getCollisionBox().height;
+
+
+
+        boolean isCollidedTopLeft = Game.chunkHandler.getChunk(Game.chunkHandler.toChunkPos(entitiesLeftWorldX,entitiesTopWorldY)[0])
+                .getTile(Game.chunkHandler.toChunkPos(entitiesLeftWorldX,entitiesTopWorldY)[1]).isCollision();
+        boolean isCollidedTopRight = Game.chunkHandler.getChunk(Game.chunkHandler.toChunkPos(entitiesRightWorldX,entitiesTopWorldY)[0])
+                .getTile(Game.chunkHandler.toChunkPos(entitiesRightWorldX,entitiesTopWorldY)[1]).isCollision();
+        boolean isCollidedBottomLeft = Game.chunkHandler.getChunk(Game.chunkHandler.toChunkPos(entitiesLeftWorldX,entitiesBottomWorldY)[0])
+                .getTile(Game.chunkHandler.toChunkPos(entitiesLeftWorldX,entitiesBottomWorldY)[1]).isCollision();
+        boolean isCollidedBottomRight = Game.chunkHandler.getChunk(Game.chunkHandler.toChunkPos(entitiesRightWorldX,entitiesBottomWorldY)[0])
+                .getTile(Game.chunkHandler.toChunkPos(entitiesRightWorldX,entitiesBottomWorldY)[1]).isCollision();
+
+
+        System.out.println(isCollidedTopLeft);
+        System.out.println(isCollidedTopRight);
+        System.out.println(isCollidedBottomLeft);
+        System.out.println(isCollidedBottomRight);
+
+
+    }
 
 }

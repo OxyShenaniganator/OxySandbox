@@ -5,7 +5,7 @@
     "player"
   ],
   "spriteSize": [34, 36, 4, 8],
-  "collisionSize": [6,17,21,15],
+  "collisionSize": [8,18,17,18],
   "animationSeq": [
     "S","W","A","D","SA","SD","WA","WD"
   ],
